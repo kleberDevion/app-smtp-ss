@@ -1,0 +1,251 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  overflow-x: hidden;
+  background: #e3e9f7;
+  width: 100%;
+  height: 100vh;
+  padding-right: 0;
+}
+
+.topo {
+  width: 100%;
+  height: 80px;
+  background: #fff;
+  border-bottom: 2px solid whitesmoke;
+}
+
+.title-body {
+  display: flex;
+  transform: translateX(40px, 20px);
+  width: 200px;
+  height: 80px;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.linha {
+  width: 200px;
+  height: 2px;
+  border-radius: 50%;
+  border: 1px solid #4585f4;
+  position: absolute;
+  display: flex;
+  transform: translate(20px, 20px);
+  background: #4585f4;
+}
+
+.openModal-body {
+  width: 200px; height: 80px;
+  display: flex; align-items: center;
+  justify-content: center; transform: translate(450px, -80px);
+}
+
+.open-modal {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.rodape {
+  width: 100%;
+  height: 120px;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  background: #fff;
+  display: flex;
+  transform: translateY(1070px);
+  z-index: 1000;
+  position: fixed;
+  left: 0;
+  right: 0;
+  flex-direction: row;
+  gap: 50px;
+}
+
+.return-page {
+  width: 50px;
+  height: 40px;
+  border-radius: 8px;
+  background: #4285f4;
+  display: flex;
+  transform: translate(40px, 30px);
+  justify-content: center;
+  align-items: center;
+}
+
+.inbox-smtp {
+  width: 50px;
+  height: 50px;
+  width: 50px;
+  height: 40px;
+  border-radius: 8px;
+  background: #4285f4;
+  display: flex;
+  transform: translate(40px, 30px);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.submit {
+  width: 140px;
+  height: 50px;
+  border: none;
+  border-radius: 12px;
+  background: #4285f4;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  display: flex;
+  transform: translateY(-180px);
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+}
+
+#formSmtp {
+  width: 100%;
+  height: 1100px;
+  position: fixed !important;
+  border: 1px solid red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transform: translateY(250px);
+  gap: 20px
+}
+
+.sobre {
+  width: 100%;
+  height: 50px;
+  border: none;
+  display: flex;
+  transform: translateY(-0px);
+  align-items: center;
+  justify-content: center;
+  font-family: 'inter', sans-serif;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.menu {
+  width: 300px;
+  height: 1150px;
+  position: fixed;
+  background: #fff;
+  border: 1px solid gray;
+  border-radius: 12px;
+  display: flex;
+  left: -300px;
+  transform: translateY(-196px);
+  transition: all 0.5s ease-in-out;
+  z-index: 999;
+}
+
+.menu.ativo {
+  display: flex;
+  transition: all 0.5s ease-in-out;
+  left: 0;
+}
+
+.sobre a {
+  text-decoration: none;
+  color: #4285f4;
+  display: flex;
+  transform: translateX(-7px);
+}
+
+#nome {
+  outline: none;
+  width: 400px;
+  height: 50px;
+  border-radius: 8px;
+  border: none;
+  padding-left: 20px;
+  display: flex;
+  transform: translatey(-250px);
+}
+
+#remetente {
+  outline: none;
+  width: 400px;
+  height: 50px;
+  border-radius: 8px;
+  border: none;
+  padding-left: 20px;
+  display: flex;
+  transform: translateY(-240px);
+}
+
+#destinatario {
+  outline: none;
+  width: 400px;
+  height: 50px;
+  border-radius: 8px;
+  border: none;
+  padding-left: 20px;
+  display: flex;
+  transform: translatey(-230px);
+}
+
+#senha_app {
+  outline: none;
+  width: 400px;
+  height: 50px;
+  border-radius: 8px;
+  border: none;
+  padding-left: 20px;
+  display: flex;
+  transform: translatey(-220px);
+}
+
+#assunto {
+  outline: none;
+  width: 400px;
+  height: 120px;
+  border-radius: 8px;
+  border: none;
+  padding-left: 20px;
+  display: flex;
+  transform: translatey(-210px);
+  padding-top: 20px;
+}
+
+#nome::placeholder {
+  color: black;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+#remetente::placeholder {
+  color: black;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+#destinatario::placeholder {
+  color: black;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+#senha_app::placeholder {
+  color: black;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+#assunto::placeholder {
+  color: black;
+  font-weight: bold;
+  font-size: 13px;
+}

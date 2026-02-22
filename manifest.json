@@ -1,0 +1,17 @@
+{
+  "name": "Meu App",
+  "short_name": "App",
+  "start_url": "/",
+  "start_url": "/dashboard.html",
+  "start_url": "/smtp-envio.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1f2e",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="style.envio-smtp.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>kleberdevion.com</title>
+</head>
+<body>
+  
+  <header class="topo">
+     <div class="title-body">
+       <h2 class="title"><strong>SmtpSender</strong></h2>
+       <i class="fas fa-cloud" style="color: #4285f4; font-size: 25px; font-weight: bold; display: flex; position: absolute; transform: translate(98px, -0px);"></i>
+       <div class="linha"></div>
+     </div>
+     <div class="openModal-body">
+       <button class="open-modal">
+         <i class="fas fa-gear" style="color: #4285f4; font-weight: bold; font-size: 17px;"></i>
+       </button>
+     </div>
+  <div class="menu">
+    <i class="fas fa-mail"></i>
+  </div>
+  </header>
+  
+  <form id="formSmtp">
+    <input type="text" id="nome" placeholder="Seu nome">
+    <input type="text" id="remetente" placeholder="Seu email">
+    <input type="text" id="destinatario" placeholder="Email do destinatario">
+    <input type="text" id="senha_app" placeholder="Sua senha de app">
+    <textarea type="text" id="assunto" placeholder="Seu assunto"></textarea>
+    <button class="submit" type="submit">
+        Enviar
+       <i class="fas fa-paper-plane" style="color: #fff; font-size: 12px;"></i>
+    </button>
+    <div class="sobre">
+      <a href="#">Entender como funcinona</a>
+    </div>
+  </form>
+  
+  <footer class="rodape">
+    <div class="return-page">
+      <i class="fas fa-home" style="color: #fff; width: 14px; height: 14px; object-fit: cover;"></i>
+        <h1 style="color: #4285f4; font-size: 5px; font-weight: bold; display: flex; position: absolute; transform: translateY(30px);"><strong>Home</strong></h1>
+    </div>
+    </div>
+    <div class="inbox-smtp">
+      <i class="fas fa-inbox" style="color: #fff; width: 14px; height: 14px; object-fit: cover;"></i>
+      <h1 style="color: #4285f4; font-size: 5px; font-weight: bold; display: flex; position: absolute; transform: translateY(30px);"><strong>Inbox</strong></h1>
+    </div>
+  </footer>
+  <script>
+    
+const botao = document.querySelector('.open-modal');
+const menu = document.querySelector('.menu');
+
+botao.addEventListener('click', function() {
+  menu.classList.toggle('ativo');
+});
+
+const form = document.querySelector('#formSmtp');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const data = {
+    nome: document.querySelector('#nome').value,
+    remetente: document.querySelector('#remetente').value,
+    destinatario: document.querySelector('#destinatario').value,
+    senha_app: document.querySelector('#senha_app').value,
+    assunto: document.querySelector('#assunto').value
+  };
+
+  try {
+    const response = await fetch('http://localhost:7001/api/postar/envios', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    
+    if (response.ok) {
+      alert('Email enviado com sucesso!');
+      form.reset();
+    } else {
+      alert('Erro: ' + result.message);
+    }
+  } catch (error) {
+    console.log(error);
+    alert('Erro na requisição');
+  }
+});
+
+  </script>
+</body>
+</html>

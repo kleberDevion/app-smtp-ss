@@ -1,0 +1,104 @@
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="manifest" href="manifest.json">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+        <link rel="stylesheet" href="style.dashboard.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Título da Página</title>
+    </head>
+    <body>
+        <header id="topo">
+            <div id="logo-ss">
+                <h2 id="titulo">Dashboard</h2>
+                <i class="fas fa-chart-area"></i>
+            </div>
+            <div id="voltar-home">
+                <button id="btn-menu">
+                    <i class="fas fa-bars" style="font-size: 25px"></i>
+                </button>
+            </div>
+        </header>
+        <div id="menu"></div>
+        <div class="dados-emails"></div>
+        <nav class="navbar">
+          <button class="buscar">Buscar</button>
+        </nav>
+        <script>
+        
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+}
+          
+const btn = document.getElementById("btn-menu");
+const menu = document.getElementById("menu");
+
+btn.onclick = () => menu.classList.toggle("aberto");
+
+const conteinerDados = document.querySelector('.dados-emails');
+const botaoFetch = document.querySelector('.buscar');
+
+async function buscarDados() {
+  try {
+    const response = await fetch('http://localhost:4001/api/buscar/envios', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    if (response.status === 404) { alert('Dados não encontrados.'); return; }
+    if (response.status === 500) { alert('Erro no servidor 500.'); return; }
+
+    const resultado = await response.json();
+
+    // Funciona tanto se vier objeto {} quanto lista [{}]
+    const lista = Array.isArray(resultado) ? resultado : [resultado];
+
+    if (lista.length === 0) {
+      conteinerDados.innerHTML = '<p>Nenhum dado encontrado.</p>';
+      return;
+    }
+
+    const htmlContent = lista.map(dados => `
+      <div style="display:flex;flex-direction:column;width:100%;height:auto;gap:0;background:#f8f9fb;font-family:'Segoe UI',sans-serif;margin-bottom:12px;">
+        <div style="width:100%;height:auto;border:1px solid #e2e6ea;border-radius:10px;display:flex;flex-direction:column;gap:0;background:#ffffff;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+          <div style="background:#1a1f2e;padding:12px 18px;display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:#4ade80;display:inline-block;"></span>
+            <span style="color:#a0aec0;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">SMTP · Dados do Envio</span>
+          </div>
+          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:10px;">
+            <p style="margin:0;font-size:13px;color:#6b7280;">
+              <span style="color:#9ca3af;font-weight:500;">Remetente</span><br>
+              <span style="color:#111827;font-weight:600;">${dados.nome || '—'}</span>
+              <span style="color:#6b7280;"> &lt;${dados.remetente || '—'}&gt;</span>
+            </p>
+            <p style="margin:0;font-size:13px;color:#6b7280;">
+              <span style="color:#9ca3af;font-weight:500;">Data do envio</span><br>
+              <span style="color:#111827;font-weight:600;">${dados.data_envio || '—'}</span>
+            </p>
+            <div style="background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:10px 14px;">
+              <p style="margin:0;font-size:13px;">
+                <span style="color:#9ca3af;font-weight:500;">Destinatário</span><br>
+                <span style="color:#111827;font-weight:600;">${dados.destinatario || '—'}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    conteinerDados.innerHTML = htmlContent;
+
+  } catch (error) {
+    console.error('Erro na requisição:', error);
+    alert('Erro ao buscar dados: ' + error.message);
+  }
+}
+
+botaoFetch.addEventListener('click', buscarDados);
+
+        </script>
+    </body>
+
+        </script>
+    </body>
+</html>
