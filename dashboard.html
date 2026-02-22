@@ -59,31 +59,30 @@ async function buscarDados() {
     }
 
     const htmlContent = lista.map(dados => `
-      <div style="display:flex;flex-direction:column;width:100%;height:auto;gap:0;background:#f8f9fb;font-family:'Segoe UI',sans-serif;margin-bottom:12px;">
-        <div style="width:100%;height:auto;border:1px solid #e2e6ea;border-radius:10px;display:flex;flex-direction:column;gap:0;background:#ffffff;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-          <div style="background:#1a1f2e;padding:12px 18px;display:flex;align-items:center;gap:8px;">
-            <span style="width:8px;height:8px;border-radius:50%;background:#4ade80;display:inline-block;"></span>
-            <span style="color:#a0aec0;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">SMTP · Dados do Envio</span>
-          </div>
-          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:10px;">
-            <p style="margin:0;font-size:13px;color:#6b7280;">
-              <span style="color:#9ca3af;font-weight:500;">Remetente</span><br>
-              <span style="color:#111827;font-weight:600;">${dados.nome || '—'}</span>
-              <span style="color:#6b7280;"> &lt;${dados.remetente || '—'}&gt;</span>
-            </p>
-            <p style="margin:0;font-size:13px;color:#6b7280;">
-              <span style="color:#9ca3af;font-weight:500;">Data do envio</span><br>
-              <span style="color:#111827;font-weight:600;">${dados.data_envio || '—'}</span>
-            </p>
-            <div style="background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:10px 14px;">
-              <p style="margin:0;font-size:13px;">
-                <span style="color:#9ca3af;font-weight:500;">Destinatário</span><br>
-                <span style="color:#111827;font-weight:600;">${dados.destinatario || '—'}</span>
-              </p>
-            </div>
-          </div>
-        </div>
+      <div style="display:flex;flex-direction:column;width:100%;height:auto;gap:0;background:#f8f9fb;font-family:'Segoe UI',sans-serif;margin-bottom:0px;">
+      <div style="width:100%;height:auto;border:1px solid #e2e6ea;display:flex;flex-direction:column;gap:0;background:#ffffff;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+      <div style="background:#1a1f2e;padding:12px 18px;display:flex;align-items:center;gap:8px;">
+      <span style="width:8px;height:8px;border-radius:50%;background:#4ade80;display:inline-block;"></span>
+      <span style="color:#a0aec0;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">SMTP · Dados do Envio</span>    </div>
+      <div style="padding:16px 18px;display:flex;flex-direction:column;gap:10px;">
+      <p style="margin:0;font-size:13px;color:#6b7280;">
+        <span style="color:#9ca3af;font-weight:500;">Remetente</span><br>
+        <span style="color:#111827;font-weight:600;">${dados.nome || '—'}</span>
+        <span style="color:#6b7280;"> &lt;${dados.remetente || '—'}&gt;</span>
+      </p>
+      <p style="margin:0;font-size:13px;color:#6b7280;">
+        <span style="color:#9ca3af;font-weight:500;">Data do envio</span><br>
+        <span style="color:#111827;font-weight:600;">${dados.data_envio || '—'}</span>
+      </p>
+      <div style="background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:10px 14px;">
+        <p style="margin:0;font-size:13px;">
+          <span style="color:#9ca3af;font-weight:500;">Destinatário</span><br>
+          <span style="color:#111827;font-weight:600;">${dados.destinatario || '—'}</span>
+        </p>
       </div>
+    </div>
+  </div>
+</div>
     `).join('');
 
     conteinerDados.innerHTML = htmlContent;
