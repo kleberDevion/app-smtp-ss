@@ -86,10 +86,10 @@ form.addEventListener('submit', async (e) => {
     const result = await response.json();
     
     if (response.ok) {
-      alert('Email enviado com sucesso!');
+      alert('Sucesso: Email enviado com sucesso!');
       form.reset();
     } else {
-      alert('Erro: ' + result.message);
+      alert('Erro: ' + result.erro);
     }
   } catch (error) {
     console.log(error);

@@ -52,7 +52,7 @@ def buscar_envios():
 
 if __name__ == '__main__':
     host = 'localhost'
-    port = 6006
+    port = 4001
     status = True
     print(f"SERVIDOR RODANDO NA PORTA: {port}, URL: http://{host}:{port}/api/ss status: {status}")
     app.run(host=host, port=port)
