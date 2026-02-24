@@ -23,8 +23,10 @@
         <div id="menu"></div>
         <div class="dados-emails"></div>
         <nav class="navbar">
-          <button class="buscar" title="Tras as informacoes do DB.">Buscar</button>
-          <button class="home-smtp" title="voltar para home" onclick="redirectUser()"></button>
+          <button class="buscar" title="Tras todos os envios.">Buscar</button>
+          <button class="home-smtp" title="voltar para home." onclick="redirectUser()">
+            <i class="fas fa-home"></i>
+          </button>
         </nav>
         <script>
 
@@ -104,6 +106,9 @@ conteinerDados2.addEventListener('click', async (e) => {
     await deletarItem(id);
   }
 });
+
+window.onload = buscarDados;
+botaoFetch.onclick = buscarDados;
 
 async function deletarItem(id) {
   try {

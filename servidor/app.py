@@ -1,5 +1,4 @@
 import sqlite3
-import json
 from datetime import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -7,7 +6,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, 
      resources={r"/api/*": {"origins": "*"}},
-     methods=['GET', 'POST', 'DELETE', 'PUT', 'OPTIONS'],
+     methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
      allow_headers=['Content-Type', 'Authorization'],
      supports_credentials=True)
 
@@ -92,7 +91,7 @@ def enviar_email():
     try:
         dados = request.get_json()
         
-        if not all(k in dados for k in ['nome', 'remetente', 'destinatario', 'assunto']):
+        if not all(k in dados for k in ['nome', 'remetente', 'destinatario',  'senha_app', 'assunto']):
             return jsonify({"erro": "Campos obrigatórios faltando"}), 400
         
         conn = sqlite3.connect('SSbanco.db')
@@ -101,9 +100,9 @@ def enviar_email():
         data_envio = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
         cursor.execute("""
-            INSERT INTO emails (nome, remetente, destinatario, assunto, data_envio)
-            VALUES (?, ?, ?, ?, ?)
-        """, (dados['nome'], dados['remetente'], dados['destinatario'], dados['assunto'], data_envio))
+            INSERT INTO emails (nome, remetente, destinatario, senha_app, assunto, data_envio)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (dados['nome'], dados['remetente'], dados['destinatario'], dados['senha_app'], dados['assunto'], data_envio))
         
         conn.commit()
         conn.close()
