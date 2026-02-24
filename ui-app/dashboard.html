@@ -24,8 +24,13 @@
         <div class="dados-emails"></div>
         <nav class="navbar">
           <button class="buscar" title="Tras as informacoes do DB.">Buscar</button>
+          <button class="home-smtp" title="voltar para home" onclick="redirectUser()"></button>
         </nav>
         <script>
+
+function redirectUser() {
+  window.location.href = './smtp-envio.html';
+}          
 
           
 const btn = document.getElementById("btn-menu");
@@ -38,7 +43,7 @@ const botaoFetch = document.querySelector('.buscar');
 
 async function buscarDados() {
   try {
-    const response = await fetch('http://localhost:4001/api/buscar/envios', {
+    const response = await fetch('http://localhost:5500/api/buscar/envios', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     });
@@ -102,7 +107,7 @@ conteinerDados2.addEventListener('click', async (e) => {
 
 async function deletarItem(id) {
   try {
-    const resposta = await fetch(`http://localhost:5001/api/deletar/${id}`, {
+    const resposta = await fetch(`http://localhost:5500/api/deletar/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
