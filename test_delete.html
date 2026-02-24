@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste DELETE</title>
+</head>
+<body>
+    <h1>Teste de DELETE</h1>
+    <button onclick="testarDelete()">Testar DELETE para ID 1</button>
+    <p id="resultado"></p>
+
+    <script>
+        async function testarDelete() {
+            try {
+                console.log("Iniciando fetch para DELETE...");
+                const resposta = await fetch(`http://localhost:5001/api/deletar/1`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log("Status:", resposta.status);
+                console.log("OK:", resposta.ok);
+
+                const dados = await resposta.json();
+                console.log("Dados recebidos:", dados);
+
+                if (!resposta.ok) {
+                    throw new Error(dados.erro || 'Erro ao deletar');
+                }
+
+                document.getElementById('resultado').innerHTML = 'Sucesso: ' + dados.mensagem;
+                console.log(dados.mensagem);
+
+            } catch (erro) {
+                console.error('Erro:', erro);
+                document.getElementById('resultado').innerHTML = 'Erro: ' + erro.message;
+            }
+        }
+    </script>
+</body>
+</html>

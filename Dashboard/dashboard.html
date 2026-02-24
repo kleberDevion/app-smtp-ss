@@ -1,7 +1,6 @@
 <html lang="pt-br">
     <head>
         <meta charset="UTF-8" />
-        <link rel="manifest" href="manifest.json">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
         <link rel="stylesheet" href="style.dashboard.css" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,10 +24,7 @@
           <button class="buscar">Buscar</button>
         </nav>
         <script>
-        
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-}
+
           
 const btn = document.getElementById("btn-menu");
 const menu = document.getElementById("menu");
@@ -59,7 +55,7 @@ async function buscarDados() {
     }
 
     const htmlContent = lista.map(dados => `
-      <div style="display:flex;flex-direction:column;width:100%;height:auto;gap:0;background:#f8f9fb;font-family:'Segoe UI',sans-serif;margin-bottom:0px;">
+      <div id="item-${dados.id}" style="display:flex;flex-direction:column;width:100%;height:auto;gap:0;background:#f8f9fb;font-family:'Segoe UI',sans-serif;margin-bottom:0px;">
       <div style="width:100%;height:auto;border:1px solid #e2e6ea;display:flex;flex-direction:column;gap:0;background:#ffffff;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
       <div style="background:#1a1f2e;padding:12px 18px;display:flex;align-items:center;gap:8px;">
       <span style="width:8px;height:8px;border-radius:50%;background:#4ade80;display:inline-block;"></span>
@@ -78,11 +74,11 @@ async function buscarDados() {
         <p style="margin:0;font-size:13px;">
           <span style="color:#9ca3af;font-weight:500;">Destinatário</span><br>
           <span style="color:#111827;font-weight:600;">${dados.destinatario || '—'}</span>
+          <button class="btn-delete" style="background:#1a1f2e;color:#ffffff;border:none;border-radius:4px;padding:6px 12px;font-size:12px;font-weight:600;display:flex;justify-content:space-between;margin-left:auto;" data-id="${dados.id}">Excluir</button>        
         </p>
       </div>
     </div>
   </div>
-</div>
     `).join('');
 
     conteinerDados.innerHTML = htmlContent;
@@ -95,8 +91,37 @@ async function buscarDados() {
 
 botaoFetch.addEventListener('click', buscarDados);
 
-        </script>
-    </body>
+const conteinerDados2 = document.querySelector('.dados-emails');
+conteinerDados2.addEventListener('click', async (e) => {
+  if (e.target.classList.contains('btn-delete')) {
+    const id = e.target.dataset.id;
+    await deletarItem(id);
+  }
+});
+
+async function deletarItem(id) {
+  try {
+    const resposta = await fetch(`http://localhost:5001/api/deletar/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      throw new Error(dados.erro || 'Erro ao deletar');
+    }
+
+    console.log(dados.mensagem);
+    document.getElementById(`item-${id}`).remove();
+
+  } catch (erro) {
+    console.error('Erro:', erro);
+    alert(erro.message);
+  }
+}
 
         </script>
     </body>
