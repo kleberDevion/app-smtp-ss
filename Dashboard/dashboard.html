@@ -10,7 +10,9 @@
         <header id="topo">
             <div id="logo-ss">
                 <h2 id="titulo">Dashboard</h2>
-                <i class="fas fa-chart-area"></i>
+              <div class="auxilio-logo">
+                <img class="logo" src="logo.png">
+              </div>
             </div>
             <div id="voltar-home">
                 <button id="btn-menu">
@@ -21,7 +23,7 @@
         <div id="menu"></div>
         <div class="dados-emails"></div>
         <nav class="navbar">
-          <button class="buscar">Buscar</button>
+          <button class="buscar" title="Tras as informacoes do DB.">Buscar</button>
         </nav>
         <script>
 
@@ -46,7 +48,6 @@ async function buscarDados() {
 
     const resultado = await response.json();
 
-    // Funciona tanto se vier objeto {} quanto lista [{}]
     const lista = Array.isArray(resultado) ? resultado : [resultado];
 
     if (lista.length === 0) {

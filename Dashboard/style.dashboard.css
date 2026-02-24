@@ -18,12 +18,13 @@ body {
   width: 100%;
   height: 80px;
   background: #fff;
-  color: #4245f7;
+  color: #2196f3;
   z-index: 999;
   position: fixed;
-  border-bottom: 2px solid gray;
+  border-bottom: 2px solid #2196f3;
   display: flex;
   justify-content: space-between;
+  padding-left: 10px;
 }
 
 #logo-ss {
@@ -38,9 +39,10 @@ body {
 
 #voltar-home {
   display: flex;
-  width: 100px;
-  height: 80px;
-  margin-top: 15px;
+  width: 50px;
+  height: 50px;
+  top: -25px;
+  right: 10px;
 }
 
 
@@ -50,8 +52,10 @@ body {
   border-radius: 50%;
   border: none;
   font-size: 16px;
-  color: #4245f7;
+  color: #2196f3;
   background: none;
+  margin-top: 15px;
+  position: fixed;
 }
 
 .dados-emails {
@@ -93,10 +97,26 @@ body {
 #menu.aberto {
   left: 0;
   transition: all 0.6s ease-in-out;
+  display: flex;
+  justify-content: space-between
 }
 
 .buscar {
-  width: 300px;
+  width: 60px;
   height: 40px;
-  background: #4245f1;
+  right: 10px;
+  background: #2196f3;
+  position: absolute;
+  border: none;
+  border-radius: 5px;
+}
+
+.auxilio-logo img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #2196f3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

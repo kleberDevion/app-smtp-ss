@@ -10,7 +10,7 @@ from email.mime.text import MIMEText
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-def init_db():
+def init_db(): 
     conn = sqlite3.connect('SSbanco.db')
     cursor = conn.cursor()
     cursor.execute('''
@@ -84,15 +84,18 @@ def postar_envios():
         server.send_message(msg)
         server.quit()
 
-        # Salvar no Banco de Dados
-        conn = sqlite3.connect('SSbanco.db')
-        cursor = conn.cursor()
-        cursor.execute('''
-            INSERT INTO emails (nome, remetente, destinatario, senha_app, assunto, data_envio)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (data['nome'], data['remetente'], data['destinatario'], senha, data['assunto'], str(datetime.now())))
-        conn.commit()
-        conn.close()
+        # Salvar no Banco de Dados de forma segura
+        try:
+            with sqlite3.connect('SSbanco.db') as conn:
+                conn.execute('PRAGMA journal_mode=WAL;')  # Garante modo seguro nesta conexão
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT INTO emails (nome, remetente, destinatario, senha_app, assunto, data_envio)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                ''', (data['nome'], data['remetente'], data['destinatario'], senha, data['assunto'], str(datetime.now())))
+                # O commit é automático ao sair do bloco 'with' se não houver erro
+        except sqlite3.Error as e:
+            return jsonify({"erro": f"Falha crítica no banco de dados: {str(e)}"}), 500
 
         return jsonify({"status": "sucesso", "mensagem": "Email enviado e registrado"}), 200
 
