@@ -58,7 +58,7 @@ async function buscarDados() {
     const lista = Array.isArray(resultado) ? resultado : [resultado];
 
     if (lista.length === 0) {
-      conteinerDados.innerHTML = '<p>Nenhum dado encontrado.</p>';
+      conteinerDados.innerHTML = '<p style="margin: auto;margin-top: auto;">Nenhum dado encontrado.</p>';
       return;
     }
 
