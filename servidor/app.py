@@ -1,4 +1,5 @@
 import sqlite3
+import json
 from datetime import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -9,6 +10,20 @@ CORS(app,
      methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
      allow_headers=['Content-Type', 'Authorization'],
      supports_credentials=True)
+
+def salvar_logs_server(mensagem):
+    try:
+        with open('LOGS-SERVER.json', 'a', encoding='utf-8') as file:
+            log_entry = json.dumps({
+                "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                "detalhes": mensagem,
+                "remetente": request.headers.get(),
+                "destinatario": request.headers.get()
+            }, ensure_ascii=False)
+            file.write(log_entry + '\n')
+            print(f"Log registrado com sucesso.")
+    except Exception as e:
+        print(f"Falha crítica ao salvar log: {e}")
 
 def get_db_connection():
     conn = sqlite3.connect('SSbanco.db')
@@ -106,7 +121,8 @@ def enviar_email():
         
         conn.commit()
         conn.close()
-        
+
+        salvar_logs_server(f"Item ID {dados['nome']} enviado com sucesso.")
         return jsonify({"mensagem": "Email salvo com sucesso"}), 200
     except Exception as e:
         return jsonify({"erro": str(e)}), 500

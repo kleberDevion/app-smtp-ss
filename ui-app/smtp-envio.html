@@ -26,10 +26,6 @@
       <input type="text" id="destinatario" placeholder="Email do destinatario">
       <input type="text" id="senha_app" placeholder="Sua senha de app">
       <textarea type="text" id="assunto" placeholder="Seu assunto"></textarea>
-      <button class="submit" type="submit">
-          Enviar
-         <i class="fas fa-paper-plane" style="color: #fff; font-size: 12px;"></i>
-      </button>
     </div>
   </form>
   
@@ -38,7 +34,7 @@
       <i class="fas fa-home" title="Aqui mesmo" style="color: #fff; width: 14px; height: 14px; object-fit: cover;"></i>
     </div>
     </div>
-    <div class="inbox-smtp" title="Ir para o Dashboard">
+    <div class="inbox-smtp" title="Ir para o Dashboard" onclick="redirectUser()">
       <i class="fas fa-inbox" style="color: #fff; width: 14px; height: 14px; object-fit: cover;"></i>
     </div>
      <div class="openModal-body">
@@ -46,9 +42,17 @@
          <i class="fas fa-bars" style="color: #4285f4; font-weight: bold; font-size: 17px;"></i>
        </button>
      </div>
+     <button class="submit" type="submit" form="formSmtp">
+          Enviar
+         <i class="fas fa-paper-plane" style="color: #fff; font-size: 8px;"></i>
+     </button>
   </footer>
 
   <script>
+
+function redirectUser() {
+  window.location.href = './dashboard.html';
+}
     
 const botao = document.querySelector('.open-modal');
 const menu = document.querySelector('.menu');
