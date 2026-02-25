@@ -21,7 +21,7 @@ body {
   color: #2196f3;
   z-index: 999;
   position: fixed;
-  border-bottom: 2px solid #2196f3;
+  border-bottom: 2px solid whitesmoke;
   display: flex;
   justify-content: space-between;
   padding-left: 10px;
@@ -75,7 +75,7 @@ body {
   position: fixed;
   z-index: 99;
   background: #fff;
-  border: none;
+  border-top: 2px solid whitesmoke;
   bottom: 0;
   display: flex;
   justify-content: space-between;
@@ -88,18 +88,20 @@ body {
   width: 300px;
   height: 100%;
   background: white;
-  border-right: 2px solid #1a1f2e;
+  border-right: 2px solid gray;
   position: fixed;
   z-index: 1000;
   left: -300px;
   transition: all 0.6s ease-in-out;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  flex-direction: column;
+  gap: 8px;
 }
 
 #menu.aberto {
   left: 0;
   transition: all 0.6s ease-in-out;
-  display: flex;
-  justify-content: space-between
 }
 
 .buscar {
@@ -153,13 +155,12 @@ body {
   font-family: 'Poppins';
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: start;
   padding-left: 8px;
   gap: 8px;
   align-items: center;
   background-color: whitesmoke;
-  transform: translateY(160px);
-  position: absolute;
+  flex-grow: 1;
 }
 
 .logs-server:hover {
@@ -173,13 +174,13 @@ body {
   font-family: 'Poppins';
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: start;
   padding-left: 8px;
   gap: 8px;
   align-items: center;
   background-color: whitesmoke;
-  transform: translateY(220px);
-  position: absolute;
+  flex-grow: 1;
+  border-top: 1px solid rgb(173, 170, 170);
 }
 
 .support:hover {

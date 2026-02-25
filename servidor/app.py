@@ -1,8 +1,12 @@
 import sqlite3
+import smtplib
+import re
 import json
 from datetime import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__)
 CORS(app, 
@@ -11,36 +15,10 @@ CORS(app,
      allow_headers=['Content-Type', 'Authorization'],
      supports_credentials=True)
 
-def salvar_logs_server(mensagem):
-    try:
-        with open('LOGS-SERVER.json', 'a', encoding='utf-8') as file:
-            log_entry = json.dumps({
-                "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                "detalhes": mensagem,
-                "remetente": request.headers.get(),
-                "destinatario": request.headers.get()
-            }, ensure_ascii=False)
-            file.write(log_entry + '\n')
-            print(f"Log registrado com sucesso.")
-    except Exception as e:
-        print(f"Falha crítica ao salvar log: {e}")
-
 def get_db_connection():
     conn = sqlite3.connect('SSbanco.db')
     conn.row_factory = sqlite3.Row
     return conn
-
-def verificar_req():
-    """
-    Verifica a autorização da requisição baseada no cabeçalho ou corpo.
-    """
-    try:
-        user_agent = request.headers.get('User-Agent', '')
-        if 'http' in user_agent or request.is_json:
-            return True
-        return False
-    except Exception:
-        return False
 
 # ==================== ROTAS GET ====================
 @app.route('/api/buscar/envios', methods=['GET', 'OPTIONS'])
@@ -49,9 +27,6 @@ def buscar_envios():
         return '', 200
     
     print(f"REQUISIÇÃO ROTA: 'GET' : {datetime.now()}")
-
-    if not verificar_req():
-        return jsonify({"message": "Requer autorização do proprietário."}), 401
 
     try:
         conn = get_db_connection()
@@ -66,6 +41,41 @@ def buscar_envios():
 
     except sqlite3.Error:
         return jsonify({"erro": "Dados inexistentes."}), 404
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+@app.route('/api/contar/envios', methods=['GET', 'OPTIONS'])
+def contar_envios():
+    if request.method == 'OPTIONS':
+        return '', 200
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT COUNT(*) as total FROM emails')
+        resultado = cursor.fetchone()
+        total = resultado['total']
+        conn.close()
+
+        return jsonify({"total": total}), 200
+
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+    
+@app.route('/api/contar/falhas', methods=['GET', 'OPTIONS'])
+def contar_falhas():
+    if request.method == 'OPTIONS':
+        return '', 200
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT COUNT(*) as total FROM logs_erro')
+        resultado = cursor.fetchone()
+        total = resultado['total']
+        conn.close()
+
+        return jsonify({"total": total}), 200
+    
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
@@ -91,6 +101,9 @@ def deletar_item(id_item):
 
 @app.route('/api/deletar/<int:id>', methods=['DELETE', 'OPTIONS'])
 def route_delete(id):
+
+    print(f"REQUISIÇÃO ROTA: 'DELETE' : {datetime.now()}")
+
     if request.method == 'OPTIONS':
         return '', 200
     
@@ -98,34 +111,96 @@ def route_delete(id):
     return jsonify(resultado), status_code
 
 # ==================== ROTAS POST ====================
-@app.route('/api/postar/envios', methods=['POST', 'OPTIONS'])
-def enviar_email():
-    if request.method == 'OPTIONS':
-        return '', 200
-    
+
+def validate_nome(nome):
+    return re.match(r'^[A-Za-zÀ-ÿ\s]+$', nome) is not None
+        
+def validate_email(email):
+    return re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email) is not None
+        
+def validate_senha_app(senha):
+    return re.match(r'^[A-Za-z\s]+$', senha) is not None
+        
+def validate_assunto(assunto):
+    return re.match(r'^[A-Za-z0-9\s]+$', assunto) is not None
+
+def registrar_erro(tipo, mensagem, remetente):
     try:
-        dados = request.get_json()
-        
-        if not all(k in dados for k in ['nome', 'remetente', 'destinatario',  'senha_app', 'assunto']):
-            return jsonify({"erro": "Campos obrigatórios faltando"}), 400
-        
         conn = sqlite3.connect('SSbanco.db')
         cursor = conn.cursor()
-        
-        data_envio = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
-        cursor.execute("""
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS logs_erro (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                tipo_erro TEXT,
+                mensagem TEXT,
+                remetente TEXT,
+                data_hora TEXT
+            )
+        ''')
+        cursor.execute('''
+            INSERT INTO logs_erro (tipo_erro, mensagem, remetente, data_hora)
+            VALUES (?, ?, ?, ?)
+        ''', (tipo, mensagem, remetente, str(datetime.now())))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Falha crítica ao salvar log: {e}")
+
+@app.route('/api/postar/envios', methods=['POST', 'OPTIONS'])
+def postar_envios():
+    if request.method == 'OPTIONS':
+        return '', 200
+
+    data = request.get_json()
+    print(f"REQUISIÇÃO ROTA: 'POST' : {datetime.now()}")
+    
+    required_fields = ["nome", "remetente", "destinatario", "senha_app", "assunto"]
+    if not all(field in data for field in required_fields):
+        return jsonify({"erro": "Está faltando informações"}), 400
+
+    senha = data['senha_app'].replace(" ", "")
+    
+    try:
+        msg = MIMEMultipart()
+        msg['From'] = data['remetente']
+        msg['To'] = data['destinatario']
+        msg['Subject'] = data['assunto']
+
+        html_body = f"""
+          <div style="font-family:sans-serif;max-width:600px;margin:0 auto;border:1px solid #ddd;padding:20px;border-radius:8px">
+            <h2 style="color:#333">Relatório de Execução</h2>
+            <p style="color:#555">O processo foi finalizado com sucesso para {data['nome']}.</p>
+            <a href="#" style="background:#4CAF50;color:white;padding:10px 20px;text-decoration:none;border-radius:5px">Ver Detalhes</a>
+        </div>
+        """
+        msg.attach(MIMEText(html_body, 'html'))
+
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(data['remetente'], senha)
+        server.send_message(msg)
+        server.quit()
+
+        conn = sqlite3.connect('SSbanco.db')
+        cursor = conn.cursor()
+        cursor.execute('''
             INSERT INTO emails (nome, remetente, destinatario, senha_app, assunto, data_envio)
             VALUES (?, ?, ?, ?, ?, ?)
-        """, (dados['nome'], dados['remetente'], dados['destinatario'], dados['senha_app'], dados['assunto'], data_envio))
-        
+        ''', (data['nome'], data['remetente'], data['destinatario'], senha, data['assunto'], str(datetime.now())))
         conn.commit()
         conn.close()
 
-        salvar_logs_server(f"Item ID {dados['nome']} enviado com sucesso.")
-        return jsonify({"mensagem": "Email salvo com sucesso"}), 200
+        return jsonify({"status": "sucesso", "mensagem": "Email enviado e registrado"}), 200
+
+    except smtplib.SMTPAuthenticationError:
+        erro_msg = "Credenciais de remetente inválidas.."
+        registrar_erro("Erro de Autenticação", erro_msg, data.get('remetente'))
+        return jsonify({"erro": erro_msg}), 401
+        
     except Exception as e:
-        return jsonify({"erro": str(e)}), 500
+        erro_msg = f"Falha na operação: {str(e)}"
+        registrar_erro("Erro Geral", erro_msg, data.get('remetente'))
+        return jsonify({"erro": erro_msg}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5500)
