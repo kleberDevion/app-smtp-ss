@@ -79,6 +79,26 @@ def contar_falhas():
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
+@app.route('/api/contar/total', methods=['GET'])
+def contar_dados():
+    if request.method == 'OPTIONS':
+        return '', 200
+    try:
+        conn = sqlite3.connect('SSbanco.db')
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute('SELECT COUNT(*) as total FROM emails, logs_erro')
+        resultado = cursor.fetchone()
+        total = resultado['total']
+        conn.close()
+        
+        return jsonify({"total": total})
+
+    except Exception as e:
+        if conn:
+            conn.close()
+        return jsonify({"erro": str(e)}), 500
+
 # ==================== ROTAS DELETE ====================
 def deletar_item(id_item):
     conn = None
