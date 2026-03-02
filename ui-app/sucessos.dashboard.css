@@ -20,7 +20,7 @@ body {
   color: #2196f3;
   z-index: 999;
   position: fixed;
-  border-bottom: 2px solid whitesmoke;
+  border-bottom: 2px solid #ccc;
   display: flex;
   justify-content: space-between;
   padding-bottom: 80px;
@@ -46,6 +46,8 @@ body {
     flex-direction: column;
     padding-top: 82px;
     padding-bottom: 80px;
+    border: 2px solid red;
+    background-color: #fff;
 }
 
 .sucessos-emails {border: 2px solid red;
@@ -63,25 +65,25 @@ body {
 }
 
 .total-emails {
+  width: 700px;
+  height: 200px;
+  border: none;
+  padding-top: 10px;
+  padding-right: 10px;
+  padding-left: 10px;
+  right: 4px;
+}
+
+.grafico-envios {
   width: 1200px;
-  height: 420px;
-  border: 2px solid red;
-  padding-top: 80px;
-  padding-bottom: 80px;
+  height: 620px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
   position: absolute;
-  right: 0px;
-}
-
-.sucessos-emails:hover {
+  background-color: whitesmoke;
+  right: 10px;
   display: flex;
-  transform: scale(0.97);
-  transition: all 0.5s ease-in-out;
-}
-
-.falhas-emails:hover {
-  display: flex;
-  transform: scale(0.97);
-  transition: all 0.5s ease-in-out;
+  transform: translateY(10px);
 }
 
 .navbar {
@@ -90,7 +92,7 @@ body {
   position: fixed;
   z-index: 99;
   background: #fff;
-  border-top: 2px solid whitesmoke;
+  border-top: 2px solid #ccc;
   bottom: 0;
   display: flex;
   justify-content: space-between;

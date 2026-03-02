@@ -16,6 +16,7 @@
           <div class="sucessos-emails"></div>
           <div class="falhas-emails"></div>
           <div class="total-emails"></div>
+          <div class="grafico-envios"></div>
        </div>
         <nav class="navbar">
           <button class="buscar" title="Tras todos os envios.">Buscar</button>
@@ -59,7 +60,7 @@ async function atualizarContadorErros() {
 
         container.innerHTML = `
           <div style="display: flex; align-items: flex-start; justify-content: start; flex-direction: column; width: 100%; height: 100%; padding: 20px; border-radius: 12px; background: #fff5f5; border: 1px solid #feb2b2; font-family: sans-serif; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-            <span style="font-size: 32px; color: #c53030; font-weight: 800; display: flex; transform: translateX(22px);">${erros.erros || 0}</span>
+            <span style="font-size: 32px; color: #c53030; font-weight: 800; display: flex; transform: translateX(43px);">${erros.erros || 0}</span>
             <span style="font-size: 12px; color: #9b2c2c; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Falhas de Envio</span>
           </div>
         `;
@@ -70,11 +71,79 @@ async function atualizarContadorErros() {
     }
 }
 
-window.onload = () => {
-    atualizarContador();     
-    atualizarContadorErros();
-};
+async function contadorTotal() {
+    try {
+        const response = await fetch('http://localhost:5500/api/contar/total');
+        const dados = await response.json();
 
+        const containerTotal = document.querySelector('.total-emails');
+
+        if (!containerTotal) return;
+
+        containerTotal.innerHTML = `
+          <div style="display: flex; top: 0; align-items: flex-start; justify-content: start; flex-direction: column; width: 100%; height: 180px; padding: 20px; border-radius: 12px; background: #f0f4f8; border: 1px solid #d1d9e6; font-family: sans-serif; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <span style="font-size: 32px; color: #102a43; font-weight: 800; display: flex; transform: translateX(43px);">${dados.total || 0}</span>
+            <span style="font-size: 12px; color: #627d98; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Total enviados</span>
+          </div>
+        `;
+    } catch (erro) {
+        console.error('Erro ao buscar contador de erros:', erro);
+        const el = document.querySelector('.total-emails');
+        if (el) el.innerHTML = '<p style="color:red; font-size:12px; margin: auto; margin-top: auto;">Erro ao buscar infos</p>';
+    }
+
+}
+
+async function carregarDados() {
+    try {
+        const response = await fetch('http://localhost:5500/api/grafico/enviados');
+        const dadosBrutos = await response.json(); 
+
+        const listaSemafora = Array.isArray(dadosBrutos) ? dadosBrutos : [dadosBrutos];
+
+        const somaMap = listaSemafora.reduce((acc, total) => {
+            const id = total.id || "Este mes";
+            const valor = Number(total.total) || 0; 
+            
+            acc[id] = (acc[id] || 0) + valor;
+            return acc;
+        }, {});
+
+        const container = document.querySelector('.grafico-envios') || document.getElementById('grafico-envios');
+        if (!container) return;
+
+        const valores = Object.values(somaMap);
+        const maiorValor = Math.max(...valores, 1);
+        
+        let htmlBarras = "";
+        for (let chave in somaMap) {
+            const altura = (somaMap[chave] / maiorValor) * 100;
+            htmlBarras += `
+                <div style="position:absolute; left: 20px; bottom: 5px; flex:1; display:flex; flex-direction:column; align-items:center; min-height:200px; justify-content:flex-end; display: flex; gap: 10px;">
+                    <div style="background:#4e73df; width:30px; height:${altura}%; min-height:5px;"></div>
+                    <div style="width: auto; height: auto; background: #ccc;  padding-right: 10px; padding-left: 10px;">
+                      <span>${chave} ${somaMap[chave]}</span>
+                    </div>
+                </div>
+                `;
+        }
+        container.innerHTML = htmlBarras;
+
+    } catch (erro) {
+        console.error("Erro na função:", erro);
+         const element = document.querySelector('.grafico-envios');
+        if (el) element.innerHTML = '<p style="color:red; font-size:12px; margin: auto; margin-top: auto;">Sem infos</p>';
+    }
+}
+
+
+
+window.onload = () => {
+    atualizarContador();
+    atualizarContadorErros();
+    contadorTotal();
+    carregarDados();
+}
 
         </script>
     </body>

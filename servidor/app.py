@@ -84,20 +84,48 @@ def contar_dados():
     if request.method == 'OPTIONS':
         return '', 200
     try:
-        conn = sqlite3.connect('SSbanco.db')
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
-        cursor.execute('SELECT COUNT(*) as total FROM emails, logs_erro')
-        resultado = cursor.fetchone()
-        total = resultado['total']
-        conn.close()
+       conn = get_db_connection()
+       cursor = conn.cursor()
+       cursor.execute('SELECT remetente as id, COUNT(*) as total FROM emails GROUP BY remetente')
+       total_emails = cursor.fetchone()['total']
+       conn.close()
         
-        return jsonify({"total": total})
+       return jsonify({"total": total_emails})
 
     except Exception as e:
         if conn:
             conn.close()
         return jsonify({"erro": str(e)}), 500
+    
+    
+@app.route('/api/grafico/enviados', methods=['GET'])
+def grafico_tabela():
+    conn = None
+    try:
+        conn = get_db_connection()
+        conn.row_factory = sqlite3.Row 
+        cursor = conn.cursor()
+    
+        query = """
+            SELECT 
+                strftime('%m/%Y', data_envio) as id, 
+                COUNT(*) as total 
+            FROM emails 
+            GROUP BY id
+            ORDER BY data_envio ASC
+        """
+        cursor.execute(query)
+        dados = [dict(row) for row in cursor.fetchall()]
+        
+        conn.close()
+        return jsonify(dados)
+
+    except Exception as e:
+        if conn:
+            conn.close()
+        print(f"ERRO NO SERVIDOR: {str(e)}") 
+        return jsonify({"erro": str(e)}), 500
+
 
 # ==================== ROTAS DELETE ====================
 def deletar_item(id_item):
@@ -106,14 +134,20 @@ def deletar_item(id_item):
         conn = sqlite3.connect('SSbanco.db')
         cursor = conn.cursor()
 
-        cursor.execute("SELECT 1 FROM emails WHERE id = ?", (id_item,))
-        if cursor.fetchone() is None:
-            return {"erro": "Item não existe na tabela de dados."}, 404
-
         cursor.execute("DELETE FROM emails WHERE id = ?", (id_item,))
+        deletados_emails = cursor.rowcount
+
+        cursor.execute("DELETE FROM logs_erro WHERE id = ?", (id_item,))
+        deletados_logs = cursor.rowcount
+
+        if deletados_emails == 0 and deletados_logs == 0:
+            return {"erro": "Item não existe em nenhuma tabela."}, 404
+
         conn.commit()
         return {"mensagem": "Item deletado com sucesso"}, 200
+
     except Exception as e:
+        if conn: conn.rollback()
         return {"erro": f"Erro ao deletar: {str(e)}"}, 500
     finally:
         if conn:
@@ -144,7 +178,7 @@ def validate_senha_app(senha):
 def validate_assunto(assunto):
     return re.match(r'^[A-Za-z0-9\s]+$', assunto) is not None
 
-def registrar_erro(tipo, mensagem, remetente):
+def registrar_erro(tipo_erro, erro_msg, remetente):
     try:
         conn = sqlite3.connect('SSbanco.db')
         cursor = conn.cursor()
@@ -152,15 +186,15 @@ def registrar_erro(tipo, mensagem, remetente):
             CREATE TABLE IF NOT EXISTS logs_erro (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 tipo_erro TEXT,
-                mensagem TEXT,
+                erro_msg TEXT,
                 remetente TEXT,
                 data_hora TEXT
             )
         ''')
         cursor.execute('''
-            INSERT INTO logs_erro (tipo_erro, mensagem, remetente, data_hora)
+            INSERT INTO logs_erro (tipo_erro, erro_msg, remetente, data_hora)
             VALUES (?, ?, ?, ?)
-        ''', (tipo, mensagem, remetente, str(datetime.now())))
+        ''', (tipo_erro, erro_msg, remetente, str(datetime.now())))
         conn.commit()
         conn.close()
     except Exception as e:
