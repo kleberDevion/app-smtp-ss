@@ -66,9 +66,9 @@ const menu = document.getElementById("menu");
 
 document.addEventListener('click', (event) => {
   if (!menu.contains(event.target) && !btn.contains(event.target)) {
-    menu.classList.remove('aberto');
+    menu.classList.remove("aberto");
   }else if (btn.contains(event.target)) {
-    menu.classList.toggle('aberto');
+    menu.classList.toggle("aberto");
   }
 });
 

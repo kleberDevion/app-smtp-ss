@@ -130,6 +130,22 @@ def grafico_tabela():
         print(f"ERRO NO SERVIDOR: {str(e)}") 
         return jsonify({"erro": str(e)}), 500
 
+@app.route('/api/trazer/logs_erro', methods=['GET', 'OPTIONS'])
+def contar_falhas():
+    if request.method == 'OPTIONS':
+        return '', 200
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, nome, remetente, destinatario, data_envio FROM logs_erro')
+        resultado = cursor.fetchone()
+        total = resultado['total']
+        conn.close()
+
+        return jsonify({"total": total}), 200
+    
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
 
 # ==================== ROTAS DELETE ====================
 def deletar_item(id_item):

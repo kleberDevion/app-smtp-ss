@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: 0;
+}
+
+body {
+    background: #e3e9f7;
+    height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Poppins';
+}
+
+.topo {
+    display: flex;
+    width: 100%;
+    height: 80px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+    border-bottom: 2px solid #ccc;
+    flex-direction: row;
+    gap: 10px;
+    color: #2196f7;
+    z-index: 999;
+}
+
+.logo-maneger {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-image: url('logoss.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    object-fit: fill;
+}
+
+.ir-ate-dash {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: transparent;
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
+
+.ir-ate-visao-geral {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: transparent;
+    position: absolute;
+    right: 50px;
+    cursor: pointer;
+}
+
+.barra-lateral {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: transparent;
+    position: absolute;
+    right: 90px;
+    cursor: pointer;
+}
+
+.ir-ate-dash:hover {
+    transform: scale(1.03);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.ir-ate-visao-geral:hover {
+    transform: scale(1.03);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.barra-lateral:hover {
+    transform: scale(1.03);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.menu-ease {
+    width: 300px;
+    height: 100%;
+    background: #fff;
+    border-right: 2px solid #ccc;
+    background: white;
+    position: fixed;
+    z-index: 1000;
+    left: -300px;
+    bottom: 0;
+    transition: all 0.6s ease-in-out;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.menu-ease.aberto {
+    left: 0 !important;
+    display: flex !important;
+}
