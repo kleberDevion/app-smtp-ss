@@ -1,9 +1,9 @@
 import sqlite3
 import smtplib
 import re
-import json
+import os
 from datetime import datetime
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -19,6 +19,10 @@ def get_db_connection():
     conn = sqlite3.connect('SSbanco.db')
     conn.row_factory = sqlite3.Row
     return conn
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(os.getcwd(), filename)
 
 # ==================== ROTAS GET ====================
 @app.route('/api/buscar/envios', methods=['GET', 'OPTIONS'])

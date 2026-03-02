@@ -21,7 +21,7 @@ body {
   color: #2196f3;
   z-index: 999;
   position: fixed;
-  border-bottom: 2px solid whitesmoke;
+  border-bottom: 2px solid #ccc;
   display: flex;
   justify-content: space-between;
   padding-left: 10px;
@@ -45,7 +45,6 @@ body {
   top: -25px;
   right: 10px;
 }
-
 
 #btn-menu {
   width: 50px;
@@ -75,7 +74,7 @@ body {
   position: fixed;
   z-index: 99;
   background: #fff;
-  border-top: 2px solid whitesmoke;
+  border-top: 2px solid #ccc;
   bottom: 0;
   display: flex;
   justify-content: space-between;

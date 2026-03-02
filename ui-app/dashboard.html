@@ -1,10 +1,11 @@
 <html lang="pt-br">
     <head>
+        <link rel="manifest" href="./manifest.json">
         <meta charset="UTF-8" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
         <link rel="stylesheet" href="style.dashboard.css" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Título da Página</title>
+        <title>PAINEL DE CONTROLE</title>
     </head>
     <body>
         <header id="topo">
@@ -52,6 +53,13 @@ function redirectUser() {
   window.location.href = './smtp-envio.html';
 }          
 
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker registrado!', reg))
+        .catch(err => console.log('Erro ao registrar Service Worker:', err));
+    });
+  }
           
 const btn = document.getElementById("btn-menu");
 const menu = document.getElementById("menu");
