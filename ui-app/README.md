@@ -12,7 +12,7 @@ O projeto conta com um design limpo e adaptável para diferentes tamanhos de tel
 Como visto na interface atual, os dados são organizados verticalmente para facilitar a leitura em dispositivos móveis, apresentando blocos de informações claros e o botão de ação destacado.
 
 <p align="center">
-  <img src="./mobile.png" alt="Interface Mobile do Projeto" width="300">
+  <img src="./Tela Mobile.png" alt="Interface Mobile do Projeto" width="300">
 </p>
 
 ### 🖥️ Visualização Desktop
