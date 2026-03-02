@@ -25,7 +25,7 @@ Uma aplicação moderna e intuitiva para gerenciamento e monitoramento de envios
 Aqui está uma prévia da interface do projeto:
 
 <p align="center">
-  <img src="./" alt="Dashboard do app-smtp-ss" width="400">
+  <img src="./Tela Mobile.png" alt="Dashboard do app-smtp-ss" width="400">
 </p>
 
 ---
