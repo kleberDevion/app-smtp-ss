@@ -11,14 +11,14 @@ O projeto conta com um design limpo e adaptável para diferentes tamanhos de tel
 ### 📱 Visualização Mobile
 Como visto na interface atual, os dados são organizados verticalmente para facilitar a leitura em dispositivos móveis, apresentando blocos de informações claros e o botão de ação destacado.
 
-<p align="center">
+<p style="display: flex; position: absolute; left: 0;">
   <img src="./Tela Mobile.png" alt="Interface Mobile do Projeto" width="300">
 </p>
 
 ### 🖥️ Visualização Desktop
 Na versão para computadores, a interface se expande horizontalmente, permitindo uma visualização mais ampla dos logs e do menu de navegação lateral ou superior.
 
-<p align="center">
+<p style="display: flex; position: absolute; left: 0;">
   <img src="./desktop-view.png" alt="Interface Desktop do Projeto" width="800">
 </p>
 
@@ -47,3 +47,5 @@ Com base na estrutura do `ui-app`, o sistema foca em:
 <p align="center">
   Mantido por <a href="https://github.com">Kleber Devion</a>
 </p>
+
+# OBS: Este projeto esta em fase desenvolvimento, viso continuar ate o fim deste ano, o README.md pode esta desatualizado. Atualizado em [03/2026/: 1:28 PM]
