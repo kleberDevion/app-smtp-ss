@@ -1,49 +1,49 @@
-# app-smtp-ss
-Aplicativo de disparos SMTP | App of trigger SMTP 
-
-
 # 📧 app-smtp-ss
 
-Uma aplicação moderna e intuitiva para gerenciamento e monitoramento de envios via protocolo **SMTP**. Com este dashboard, você pode visualizar dados detalhados de remetentes, destinatários e logs de envio em tempo real.
+Sistema de monitoramento e log para envios **SMTP**. Esta aplicação permite visualizar de forma clara os dados de envios realizados, incluindo remetente, destinatário e o timestamp preciso de cada operação.
 
 ---
 
-## 🚀 Funcionalidades
+## 📸 Demonstração da Interface
 
-- **Monitoramento SMTP:** Acompanhe o status e os dados de cada e-mail enviado.
-- **Gestão de Envios:** Visualize informações completas como:
-  - Remetente (e-mail e nome).
-  - Destinatário.
-  - Data e hora exata do envio (com precisão de milissegundos).
-- **Interface Amigável:** Dashboard responsivo e limpo para facilitar a navegação.
-- **Busca Avançada:** Filtre seus logs de envio rapidamente.
+O projeto conta com um design limpo e adaptável para diferentes tamanhos de tela.
 
----
-
-## 📸 Screenshots
-
-Aqui está uma prévia da interface do projeto:
+### 📱 Visualização Mobile
+Como visto na interface atual, os dados são organizados verticalmente para facilitar a leitura em dispositivos móveis, apresentando blocos de informações claros e o botão de ação destacado.
 
 <p align="center">
-  <img src="./Tela Mobile.png" alt="Dashboard do app-smtp-ss" width="400">
+  <img src="./png" alt="Interface Mobile do Projeto" width="300">
+</p>
+
+### 🖥️ Visualização Desktop
+Na versão para computadores, a interface se expande horizontalmente, permitindo uma visualização mais ampla dos logs e do menu de navegação lateral ou superior.
+
+<p align="center">
+  <img src="./desktop-view.png" alt="Interface Desktop do Projeto" width="800">
 </p>
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Detalhes do Projeto
 
-Este projeto foi construído com as seguintes ferramentas:
+Com base na estrutura do `ui-app`, o sistema foca em:
 
-- **Frontend:** HTML, CSS e JavaScript (ou sua tecnologia específica, ex: React/Vue).
-- **Backend:** (Ex: Node.js / Python / PHP) - *Complete aqui conforme o seu código.*
-- **Protocolo:** SMTP (Simple Mail Transfer Protocol).
+- **Dashboard Principal:** Exibição do "Status do Envio".
+- **Dados Coletados:**
+  - **Remetente:** Nome e e-mail de origem.
+  - **Data do envio:** Registro com precisão de milissegundos.
+  - **Destinatário:** E-mail de destino.
+- **Ações:** Opção de excluir logs diretamente da interface.
 
 ---
 
-## 📦 Como Instalar e Rodar
+## 🚀 Como Visualizar
 
-Siga os passos abaixo para executar o projeto localmente:
+1. Clone o repositório: `git clone https://github.com`
+2. Navegue até a pasta: `cd ui-app`
+3. Abra o arquivo principal no seu navegador para ver a responsividade em ação.
 
-1. **Clone o repositório:**
-   ```bash
-   git clone https://github.com
+---
+<p align="center">
+  Mantido por <a href="https://github.com">Kleber Devion</a>
+</p>
