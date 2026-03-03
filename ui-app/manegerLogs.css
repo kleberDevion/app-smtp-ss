@@ -12,6 +12,12 @@ body {
     height: 100vh;
     overflow-x: hidden;
     font-family: 'Poppins';
+    padding-left: 40px;
+    contain: content;
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
 
 .topo {
@@ -21,7 +27,7 @@ body {
     background: #fff;
     display: flex;
     align-items: center;
-    padding-left: 30px;
+    padding-left: -80px;
     border-bottom: 2px solid #ccc;
     flex-direction: row;
     gap: 10px;
@@ -95,7 +101,7 @@ body {
     background: white;
     position: fixed;
     z-index: 1000;
-    left: -300px;
+    left: -260px;
     bottom: 0;
     transition: all 0.6s ease-in-out;
     overflow-y: auto;
@@ -107,4 +113,13 @@ body {
 .menu-ease.aberto {
     left: 0 !important;
     display: flex !important;
+}
+
+.logs-ids {
+  width: 100%;
+  height: auto;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
 }

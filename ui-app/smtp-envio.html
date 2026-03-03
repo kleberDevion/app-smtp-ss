@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.envio-smtp.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>kleberdevion.com</title>
@@ -14,51 +15,75 @@
        <h2 class="title"><strong>SmtpSender</strong></h2>
        <i class="fas fa-cloud" style="color: #4285f4; font-size: 25px; font-weight: bold; display: flex; position: absolute; transform: translate(98px, -0px);"></i>
      </div>
-  <div class="menu">
-    <i class="fas fa-mail"></i>
-  </div>
-  </header>
-  
-  <form id="formSmtp">
-    <div class="div-form">
-      <input type="text" id="nome" placeholder="Seu nome">
-      <input type="text" id="remetente" placeholder="Seu email">
-      <input type="text" id="destinatario" placeholder="Email do destinatario">
-      <input type="text" id="senha_app" placeholder="Sua senha de app">
-      <textarea type="text" id="assunto" placeholder="Seu assunto"></textarea>
-    </div>
-  </form>
-  
-  <footer class="rodape">
-    <div class="return-page">
-      <i class="fas fa-home" title="Aqui mesmo" style="color: #fff; width: 14px; height: 14px; object-fit: cover;"></i>
-    </div>
-    </div>
-    <div class="inbox-smtp" title="Ir para o Dashboard" onclick="redirectUser()">
-      <i class="fas fa-inbox" style="color: #fff; width: 14px; height: 14px; object-fit: cover;"></i>
-    </div>
-     <div class="openModal-body">
-       <button class="open-modal">
-         <i class="fas fa-bars" style="color: #4285f4; font-weight: bold; font-size: 17px;"></i>
+      <div class="openModal-body">
+       <button class="open-modal" onclick="openEmailSender()">
+         <i class="ri-mail-send-line" style="color: #4285f4; font-weight: bold; font-size: 30px;"></i>
        </button>
      </div>
-     <button class="submit" type="submit" form="formSmtp">
-          Enviar
-         <i class="fas fa-paper-plane" style="color: #fff; font-size: 8px;"></i>
-     </button>
-  </footer>
+  </header>
+
+  <div class="menu">
+    <div class="v-geral" onclick="window.location.href = './resultados-emails.html'" style="font-size: 12px; color: #205266; font-weight: bold; background-color: whitesmoke; display: flex; flex-direction: row; border-bottom: 1px solid #ccc; width: 100%; height: 50px; align-content: center; padding-left: 10px; padding-top: 15px; gap: 12px;" title="Ir ate o dashboard de visualização geral dos dados.">
+     <p>
+      Visão geral
+     </p>
+    </div>
+    <div class="v-geral" onclick="window.location.href = './dashboard.html'" style="font-size: 12px; color: #205266; font-weight: bold; background-color: whitesmoke; display: flex; flex-direction: row; border-bottom: 1px solid #ccc; width: 100%; height: 50px; align-content: center; padding-left: 10px; padding-top: 15px; gap: 12px;" title="Ir ate o dashboard principal">
+     <p>
+      Dashboard main 
+     </p>
+     <i class="fas fa-chart-line" style="font-size: 17px; color: #2196f7; margin-top: px; "></i>
+    </div>
+     <div class="v-geral" onclick="window.location.href = './manager.html'" style="font-size: 12px; color: #205266; font-weight: bold; background-color: whitesmoke; display: flex; flex-direction: row; border-bottom: 1px solid #ccc; width: 100%; height: 50px; align-content: center; padding-left: 10px; padding-top: 15px; gap: 12px;" title="Visualizar os erros de envio de emails">
+     <p>
+      logs manager
+     </p>
+     <i class="fas fa-server" style="font-size: 17px; color: #2196f7; margin-top: px;"></i>
+    </div>
+  </div>
+
+  <form id="formSmtp">
+    <div class="div-form">
+      <button type="button" class="close-form" onclick="closeForm()" title="Fechar formulario de envio">
+           <i class="fas fa-sign-out" style="color: #fff; font-size: 12px;"></i>
+      </button>
+      <div class="corpo-inputs"> 
+         <input type="text" id="nome" placeholder="Seu nome">
+         <input type="text" id="remetente" placeholder="Seu email">
+         <input type="text" id="destinatario" placeholder="Email do destinatario">
+         <input type="text" id="senha_app" placeholder="Sua senha de app">
+         <textarea type="text" id="assunto" placeholder="Seu assunto"></textarea>
+      </div>
+      <button class="submit" type="submit" form="formSmtp">
+         <i class="fas fa-paper-plane" style="color: #fff; font-size: 12px; object-fit: fill;" title="Enviar template"></i>
+      </button>
+    </div>
+  </form>
+ 
+
+  <footer class="rodape"></footer>
 
   <script>
+
+function openEmailSender() {
+  const form = document.querySelector('#formSmtp');
+  form.classList.toggle('ativado');
+}
+
+function closeForm() {
+  const button = document.querySelector('#formSmtp');
+  button.classList.toggle('ativado');
+}
+
 
 function redirectUser() {
   window.location.href = './dashboard.html';
 }
-    
-const botao = document.querySelector('.open-modal');
+  
 const menu = document.querySelector('.menu');
 
-botao.addEventListener('click', function() {
-  menu.classList.toggle('ativo');
+menu.addEventListener('click', () => {
+  menu.classList.toggle("ativo");
 });
 
 const form = document.querySelector('#formSmtp');
@@ -96,6 +121,8 @@ form.addEventListener('submit', async (e) => {
     alert('Erro: Erro na requisição');
   }
 });
+
+const socket = io('http://localhost:5500');
 
   </script>
 </body>

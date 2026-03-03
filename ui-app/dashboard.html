@@ -2,6 +2,7 @@
     <head>
         <link rel="manifest" href="./manifest.json">
         <meta charset="UTF-8" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
         <link rel="stylesheet" href="style.dashboard.css" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,13 +27,7 @@
           <nav class="logs-server" onclick="passUser()">
           <p class="titulo">
             Visão Geral
-            <i class="fas fa-server" style="font-size: 18px; margin-left: 8px;"></i>
-          </p>
-          </nav>
-          <nav class="support">
-          <p class="titulo">
-            Suporte Técnico
-            <i class="fas fa-headset" style="font-size: 18px; margin-left: 8px;"></i>
+            <i class="fas fa-server" style="font-size: 18px; margin-left: 8px; color: #2196f7;"></i>
           </p>
           </nav>
         </div>
@@ -42,10 +37,17 @@
           <button class="home-smtp" title="voltar para home." onclick="redirectUser()">
             <i class="fas fa-home"></i>
           </button>
+          <button class="logs-erro" onclick="logsErro()">
+            <i class="fas fa-server"></i>
+          </button>
         </nav>
         <script>
 
-function passUser () {
+function logsErro() {
+  window.location.href = './manager.html';
+}
+
+function passUser() {
   window.location.href = './resultados-emails.html';
 }
 
@@ -92,8 +94,8 @@ async function buscarDados() {
     if (lista.length === 0) {
       conteinerDados.innerHTML = `
       <div style="width: auto; height: 40px; display: flex; justify-content: center; align-items: center; flex-direction: row; gap: 20px; margin: auto;margin-top: auto;">
-        <p style="margin: auto;margin-top: auto;">Nenhum dado encontrado.
-          <i class="fas fa-folder-open" style="font-size: 25px;"></i>
+        <p style="margin: auto;margin-top: auto;">Nada aqui por enquanto.
+          <i class="ri-mail-send-line" style="font-size: 35px; display: flex; position: absolute; transform: translate(87px, -70px); color: #2196f7;"></i>
         </p>
       </div>
       `;

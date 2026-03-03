@@ -2,6 +2,7 @@ import sqlite3
 import smtplib
 import re
 import os
+from flask_socketio import SocketIO, emit
 from datetime import datetime
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -9,6 +10,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__)
+
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+
 CORS(app, 
      resources={r"/api/*": {"origins": "*"}},
      methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -90,7 +94,7 @@ def contar_dados():
     try:
        conn = get_db_connection()
        cursor = conn.cursor()
-       cursor.execute('SELECT remetente as id, COUNT(*) as total FROM emails GROUP BY remetente')
+       cursor.execute('SELECT COUNT(*) as total FROM emails')
        total_emails = cursor.fetchone()['total']
        conn.close()
         
@@ -131,21 +135,26 @@ def grafico_tabela():
         return jsonify({"erro": str(e)}), 500
 
 @app.route('/api/trazer/logs_erro', methods=['GET', 'OPTIONS'])
-def contar_falhas():
+def trazer_logs():
     if request.method == 'OPTIONS':
-        return '', 200
+        return '', 200  
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT id, nome, remetente, destinatario, data_envio FROM logs_erro')
-        resultado = cursor.fetchone()
-        total = resultado['total']
+        cursor.execute('SELECT id, tipo_erro, mensagem, remetente, data_hora FROM logs_erro')
+        rows = cursor.fetchall()
+
+        resultado = [dict(row) for row in rows]
         conn.close()
 
-        return jsonify({"total": total}), 200
+        return jsonify(resultado), 200
     
     except Exception as e:
+        if conn:
+            conn.close()
         return jsonify({"erro": str(e)}), 500
+
 
 # ==================== ROTAS DELETE ====================
 def deletar_item(id_item):
@@ -175,6 +184,17 @@ def deletar_item(id_item):
 
 @app.route('/api/deletar/<int:id>', methods=['DELETE', 'OPTIONS'])
 def route_delete(id):
+
+    print(f"REQUISIÇÃO ROTA: 'DELETE' : {datetime.now()}")
+
+    if request.method == 'OPTIONS':
+        return '', 200
+    
+    resultado, status_code = deletar_item(id)
+    return jsonify(resultado), status_code
+
+@app.route('/api/deletar/falhas/<int:id>', methods=['DELETE', 'OPTIONS'])
+def delete_falha(id):
 
     print(f"REQUISIÇÃO ROTA: 'DELETE' : {datetime.now()}")
 
@@ -264,10 +284,13 @@ def postar_envios():
         conn.commit()
         conn.close()
 
+        socketio.emit('atualizar_notificacao', {'status': 'sucesso', 'nome': data['nome']})
+
         return jsonify({"status": "sucesso", "mensagem": "Email enviado e registrado"}), 200
 
     except smtplib.SMTPAuthenticationError:
         erro_msg = "Credenciais de remetente inválidas.."
+        socketio.emit('atualizar_notificacao', {'status': 'erro', 'msg': 'Falha de login'})
         registrar_erro("Erro de Autenticação", erro_msg, data.get('remetente'))
         return jsonify({"erro": erro_msg}), 401
         
@@ -277,4 +300,4 @@ def postar_envios():
         return jsonify({"erro": erro_msg}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5500)
+    socketio.run(app, debug=True, host='0.0.0.0', port=5500)

@@ -110,7 +110,17 @@ async function carregarDados() {
         }, {});
 
         const container = document.querySelector('.grafico-envios') || document.getElementById('grafico-envios');
-        if (!container) return;
+
+        if (listaSemafora.length === 0 || !dadosBrutos[0].id) {
+            container.innerHTML = `
+               <div style="width: auto; height: auto; display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 20px; margin: auto; margin-top:300px;">
+                 <p style="margin: auto;margin-top: auto;">Nada aqui por enquanto.
+                   <i class="fas fa-folder-open" style="font-size: 25px; color: #ccc;"></i>
+                 </p>
+               </div>
+            `;
+            return;
+        }
 
         const valores = Object.values(somaMap);
         const maiorValor = Math.max(...valores, 1);
@@ -135,8 +145,6 @@ async function carregarDados() {
         if (el) element.innerHTML = '<p style="color:red; font-size:12px; margin: auto; margin-top: auto;">Sem infos</p>';
     }
 }
-
-
 
 window.onload = () => {
     atualizarContador();
