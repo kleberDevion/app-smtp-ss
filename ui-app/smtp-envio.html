@@ -15,6 +15,9 @@
        <h2 class="title"><strong>SmtpSender</strong></h2>
        <i class="fas fa-cloud" style="color: #4285f4; font-size: 25px; font-weight: bold; display: flex; position: absolute; transform: translate(98px, -0px);"></i>
      </div>
+     <button type="button" class="log-out" onclick="logout()" title="Sair">
+      <i class="fas fa-sign-out"></i>
+     </button>
       <div class="openModal-body">
        <button class="open-modal" onclick="openEmailSender()">
          <i class="ri-mail-send-line" style="color: #4285f4; font-weight: bold; font-size: 30px;"></i>
@@ -122,7 +125,17 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-const socket = io('http://localhost:5500');
+const token = localStorage.getItem('token_acesso');
+
+if (!token) {
+    alert("Acesso negado! Faça login primeiro.");
+    window.location.href = "login.html";
+}
+
+function logout() {
+    localStorage.removeItem('token_acesso');
+    window.location.href = "login.html";
+}
 
   </script>
 </body>

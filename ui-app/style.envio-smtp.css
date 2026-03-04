@@ -73,14 +73,16 @@ body, html {
 
 .corpo-inputs {
   width: 100%;
-  height: 490px;
+  height: auto;
   display: flex;
   justify-content: center;
-  align-items: center;
   border: none;
   flex-direction: column;
   gap: 20px;
-  transform: translateY(-85px);
+  position: relative;
+  left: 0;
+  top: -60px;
+  padding-left: 30px;
 }
 
 .submit {
@@ -97,7 +99,7 @@ body, html {
   align-items: center;
   cursor: pointer;
   position: relative;
-  transform: translate(450px, 55px);
+  transform: translate(480px, 178px);
 }
 
 #formSmtp.ativado {
@@ -113,8 +115,6 @@ body, html {
   justify-content: center;
   align-content: center;
   z-index: 1000;
-  margin-top: auto;
-  margin: auto;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -129,12 +129,13 @@ body, html {
   width: 1020px;
   height: 700px;
   border: none;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: auto;
   margin-top: auto;
+  margin: auto;
   background-color: whitesmoke;
 }
 
@@ -197,7 +198,7 @@ body, html {
 
 #assunto {
   width: 300px;
-  height: 80px;
+  height: 260px;
   left: 30px;
   background-color: #fff;
   border-radius: 8px;
@@ -205,6 +206,13 @@ body, html {
   padding-top: 10px;
   padding-left: 10px;
   resize: none;
+  display: flex;
+  position: absolute;
+  transform: translate(320px, -0px);
+}
+
+#assunto::-webkit-scrollbar {
+  display: none;
 }
 
 #nome::placeholder {
@@ -239,7 +247,7 @@ body, html {
 
 .close-form {
   display: flex;
-  transform: translate(480px, -60px);
+  transform: translate(480px, -65px);
   width: 30px;
   height: 30px;
   border: 1px solid transparent;
@@ -249,8 +257,28 @@ body, html {
   justify-content: center;
   z-index: 99;
   cursor: pointer;
+  top: -110px;
+  right: -7px;
+  position: relative;
 }
 
 .v-geral:hover {
    cursor: pointer;box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.log-out {
+  width: 30px;
+  height: 30px;
+  background: #2196f3;
+  color: #fff;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 25px;
+  right: 80px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }

@@ -40,6 +40,7 @@
           <button class="logs-erro" onclick="logsErro()">
             <i class="fas fa-server"></i>
           </button>
+          <div id="notifys"></div>
         </nav>
         <script>
 
@@ -172,6 +173,18 @@ async function deletarItem(id) {
     console.error('Erro:', erro);
     alert(erro.message);
   }
+}
+
+const token = localStorage.getItem('token_acesso');
+
+if (!token) {
+    alert("Acesso negado! Faça login primeiro.");
+    window.location.href = "login.html";
+}
+
+function logout() {
+    localStorage.removeItem('token_acesso');
+    window.location.href = "login.html";
 }
 
         </script>

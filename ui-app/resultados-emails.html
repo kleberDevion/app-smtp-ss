@@ -153,6 +153,18 @@ window.onload = () => {
     carregarDados();
 }
 
+const token = localStorage.getItem('token_acesso');
+
+if (!token) {
+    alert("Acesso negado! Faça login primeiro.");
+    window.location.href = "login.html";
+}
+
+function logout() {
+    localStorage.removeItem('token_acesso');
+    window.location.href = "login.html";
+}
+
         </script>
     </body>
 </html>
