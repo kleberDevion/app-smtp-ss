@@ -10,19 +10,19 @@
 </head>
 <body>
    <div class="acople-form">
-      <form id="formLogin">
+      <form id="formlogin">
         
         <label for="name">Nome de login</label>
         <input type="text" id="nome" name="user-name">
 
         <label for="keyword">Senha de acesso</label>
-        <input type="text" id="senha" keyword="user-password" autocomplete="off">
+        <input type="password" id="senha" keyword="user-password" autocomplete="off">
 
-        <button type="submit" form="formLogin" class="sender-btn">
+        <button type="submit" form="formlogin" class="sender-btn">
             Criar
             <i class="fas fa-user"></i>
         </button>
-        <p class="criar-conta" onclick="window.location.href = 'login.html'";>Ja tem uma conta ?, faça login.</p>
+        <p class="criar-conta" onclick="window.location.href = 'login.html'";>Ja tem uma conta ?, <a href="./login.html" style=" color: aqua;font-size: 17px;font-weight: bold;display: flex;align-items: center;justify-content: center;cursor: pointer;">Faça login.</a></p>
       </form>
    </div>
    <div class="img-ss">
@@ -36,7 +36,7 @@
    </div>
    <script>
 
-const form = document.querySelector('#formLogin'); 
+const form = document.querySelector('#formlogin'); 
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -67,6 +67,32 @@ form.addEventListener('submit', async (e) => {
     console.error(error);
     alert('Erro: Erro na conexão com o servidor.');
   }
+});
+
+const formLogin = document.querySelector('#formlogin');
+
+formLogin.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const data = {
+    nome: document.querySelector('#nome').value,
+    senha: document.querySelector('#senha').value
+  };
+
+  const response = await fetch('http://localhost:5500/api/criar/usuario', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+
+const result = await response.json();
+
+if (response.ok) {
+    localStorage.setItem('token_acesso', result.token); 
+    alert('redirecionando para pagina de login');
+    window.location.href = 'login.html';
+}
+
 });
 
    </script>

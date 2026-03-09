@@ -1,7 +1,7 @@
 {
   "name": "App SMTP SS - Monitoramento",
   "short_name": "SMTP App", "description": "Painel de controle para gerenciamento e monitoramento de logs SMTP.",
-  "start_url": "/dashboard.html",
+  "start_url": "/redirect.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#212121",

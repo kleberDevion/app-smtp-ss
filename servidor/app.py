@@ -2,35 +2,38 @@ import sqlite3
 import smtplib
 import re
 import os
-import jwt 
+import jwt
+from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from flask import Flask, request, jsonify, send_from_directory, make_response
 from flask_cors import CORS
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-SECRET_WORD = "AUTHSPEAK_marleyah_1177"
+SECRET_WORD = os.getenv("SECRET_WORD")
+
+load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 def verifica_token(token_recebido):
     try:
-        # Tenta ler o que tem dentro do token usando a sua chave secreta
         dados = jwt.decode(token_recebido, SECRET_WORD, algorithms=["HS256"])
         return dados['usuario_id']
     except:
-        return None # Token falso ou expirado
+        return None
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(os.getcwd(), filename)
 
 
 def get_db_connection():
     conn = sqlite3.connect('SSbanco.db')
     conn.row_factory = sqlite3.Row
     return conn
-
-@app.route('/<path:filename>')
-def serve_static(filename):
-    return send_from_directory(os.getcwd(), filename)
 
 # ==================== ROTAS GET ====================
 @app.route('/api/buscar/envios', methods=['GET'])
@@ -252,7 +255,7 @@ def postar_envios():
     data = request.get_json()
     print(f"REQUISIÇÃO ROTA: 'POST' : {datetime.now()}")
     
-    required_fields = ["nome", "remetente", "destinatario", "senha_app", "assunto"]
+    required_fields = ["nome", "remetente", "destinatario", "senha_app", "assunto", "template"]
     if not all(field in data for field in required_fields):
         return jsonify({"erro": "Está faltando informações"}), 400
 
@@ -264,13 +267,12 @@ def postar_envios():
         msg['To'] = data['destinatario']
         msg['Subject'] = data['assunto']
 
-        html_body = f"""
-          <div style="font-family:sans-serif;max-width:600px;margin:0 auto;border:1px solid #ddd;padding:20px;border-radius:8px">
-            <h2 style="color:#333">Relatório de Execução</h2>
-            <p style="color:#555">O processo foi finalizado com sucesso para {data['nome']}.</p>
-            <a href="#" style="background:#4CAF50;color:white;padding:10px 20px;text-decoration:none;border-radius:5px">Ver Detalhes</a>
-        </div>
-        """
+      
+        nome_template = data.get('template')
+
+        with open(f'template/{nome_template}.html', 'r', encoding='utf-8') as f:
+            html_body = f.read()
+
         msg.attach(MIMEText(html_body, 'html'))
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -299,24 +301,19 @@ def postar_envios():
         erro_msg = f"Falha na operação: {str(e)}"
         registrar_erro("Erro Geral", erro_msg, data.get('remetente'))
         return jsonify({"erro": erro_msg}), 500
-    
-def add_cors_headers(response):
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-    return response
 
 @app.route('/api/criar/usuario', methods=['POST'])
 def criar_user():
-    if request.method == 'OPTIONS':
-        return add_cors_headers(make_response('', 204))
-    
-    data = request.get_json()
     print(f"REQUISIÇÃO ROTA: 'POST' : {datetime.now()}")
 
-    if not data or "nome" not in data or "senha" not in data:
-        return add_cors_headers(jsonify({"erro": "Está faltando informações"}), 400)
-    
+    if request.method == 'OPTIONS':
+        response = make_response('', 204)
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response
+
+    data = request.get_json()
     nome = data['nome']
     senha = data['senha'].replace(" ", "")
 
@@ -333,10 +330,12 @@ def criar_user():
             )
         ''')
         
+        senha_hash = generate_password_hash(senha)
+
         cursor.execute('''
             INSERT INTO usuarios (nome, senha, data_criacao)
             VALUES (?, ?, ?)
-        ''', (nome, senha, datetime.now().isoformat())) 
+        ''', (nome, senha_hash, datetime.now().isoformat())) 
         
         conn.commit()
         conn.close()
@@ -347,9 +346,15 @@ def criar_user():
         print(f"Erro no banco: {e}")
         return jsonify({"erro": str(e)}), 500
 
-
-@app.route('/api/login', methods=['POST'])
+@app.route('/api/login', methods=['POST', 'OPTIONS'])
 def login():
+    if request.method == 'OPTIONS':
+        response = make_response('', 204)
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response
+
     data = request.get_json()
     nome = data.get('nome')
     senha = data.get('senha')
@@ -357,25 +362,24 @@ def login():
     conn = sqlite3.connect('SSbanco.db')
     cursor = conn.cursor()
     
-    cursor.execute('SELECT id, nome FROM usuarios WHERE nome = ? AND senha = ?', (nome, senha))
+    cursor.execute('SELECT id, nome, senha FROM usuarios WHERE nome = ?', (nome,))
     usuario = cursor.fetchone()
     conn.close()
 
-    if usuario:
-         payload = {
-            "usuario_id": usuario[0],
-            "exp": datetime.utcnow() + timedelta(hours=2)
-        }
-        
-         token = jwt.encode(payload, SECRET_WORD, algorithm="HS256")
-
-         return jsonify({
-            "status": "sucesso",
-            "mensagem": "Login realizado!",
-            "usuario_id": usuario[0],
-            "token": token
-          }), 200  
+    if usuario and check_password_hash(usuario[2], senha):
+       payload = {
+        "usuario_id": usuario[0],
+        "exp": datetime.utcnow() + timedelta(hours=2)
+       }
+       token = jwt.encode(payload, SECRET_WORD, algorithm="HS256")
+       return jsonify({
+          "status": "sucesso",
+          "mensagem": "Login realizado!",
+          "usuario_id": usuario[0],
+          "token": token
+       }), 200
+    
     return jsonify({"erro": "Nome ou senha incorretos"}), 401
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5500)
+    app.run(debug=True, host='0.0.0.0', port=5500) 

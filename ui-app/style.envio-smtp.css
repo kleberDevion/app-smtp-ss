@@ -12,13 +12,13 @@ body, html {
   background: #e3e9f7;
   width: 100%;
   height: 100%;
-  padding-left: 150px;
+  padding-left: 100px;
   font-family: 'Poppins';
   justify-content: center;
 }
 
 .topo {
-  width: 1835px;
+  width: 1935px;
   height: 80px;
   background: #fff;
   border-bottom: 1px solid #ccc;
@@ -72,16 +72,15 @@ body, html {
 }
 
 .corpo-inputs {
-  width: 100%;
+  width: auto;
   height: auto;
   display: flex;
   justify-content: center;
   border: none;
   flex-direction: column;
   gap: 20px;
-  position: relative;
+  position: absolute;
   left: 0;
-  top: -60px;
   padding-left: 30px;
 }
 
@@ -98,12 +97,13 @@ body, html {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  position: relative;
-  transform: translate(480px, 178px);
+  bottom: 6px;
+  right: 6px;
+  position: absolute;
 }
 
 #formSmtp.ativado {
-  display: block;
+  display: flex;
 }
 
 #formSmtp {
@@ -112,35 +112,33 @@ body, html {
   border: none;
   display: none;
   flex-direction: column;
-  justify-content: center;
-  align-content: center;
+  gap: 10px;
   z-index: 1000;
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.6); 
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px); 
 }
 
 .div-form {
-  width: 1020px;
-  height: 700px;
+  width: 1400px;
+  height: 100%;
   border: none;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: auto;
-  margin: auto;
   background-color: whitesmoke;
+  position: relative;
+  z-index: 1;
+  top: 0;
+  right: 0;
 }
 
 .menu {
-  width: 300px;
+  width: 200px;
   height: 100%;
   position: fixed;
   background: #fff;
@@ -207,8 +205,8 @@ body, html {
   padding-left: 10px;
   resize: none;
   display: flex;
-  position: absolute;
-  transform: translate(320px, -0px);
+  position: static;
+  transform: none;
 }
 
 #assunto::-webkit-scrollbar {
@@ -247,7 +245,6 @@ body, html {
 
 .close-form {
   display: flex;
-  transform: translate(480px, -65px);
   width: 30px;
   height: 30px;
   border: 1px solid transparent;
@@ -257,9 +254,9 @@ body, html {
   justify-content: center;
   z-index: 99;
   cursor: pointer;
-  top: -110px;
-  right: -7px;
-  position: relative;
+  top: 6px;
+  right: 6px;
+  position: absolute;
 }
 
 .v-geral:hover {
@@ -276,9 +273,38 @@ body, html {
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 25px;
-  right: 80px;
+  bottom: 7px;
+  left: 5px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+}
+
+#template {
+  width: 600px;
+  height: 50px;
+  background: whitesmoke;
+  border: 2px solid #ccc;
+  z-index: 10;
+  display: flex;
+  position: absolute;
+  right: 20px;
+  top: 80px;
+}
+
+#preview-container {
+    width: 400px;
+    height: 400px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    display: flex;
+    position: relative;
+    right: 7px;
+}
+
+.head {
+  width: 1020px;
+  height: 80px;
+  background: #2196f3;
+  border-radius: 8px;
 }

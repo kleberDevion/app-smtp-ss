@@ -22,7 +22,7 @@
             Entrar
             <i class="fas fa-user"></i>
         </button>
-        <p class="criar-conta" onclick="window.location.href = 'criarUser.html'";>Nao tem uma conta ?, crie uma.</p>
+        <p class="criar-conta" onclick="window.location.href = 'criarUser.html'";>Nao tem uma conta ?, <a href="./login.html" style=" color: aqua;font-size: 17px;font-weight: bold;display: flex;align-items: center;justify-content: center;cursor: pointer;">crie uma.</a></p>
       </form>
    </div>
    <div class="img-ss">
@@ -61,6 +61,13 @@ if (response.ok) {
 }
 
 });
+
+const token = localStorage.getItem('token_acesso');
+
+if (!token) {
+    alert("Acesso negado! Faça login primeiro.");
+    window.location.href = "redirect.html";
+}
 
    </script>
 </body>

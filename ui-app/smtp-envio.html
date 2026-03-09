@@ -15,9 +15,6 @@
        <h2 class="title"><strong>SmtpSender</strong></h2>
        <i class="fas fa-cloud" style="color: #4285f4; font-size: 25px; font-weight: bold; display: flex; position: absolute; transform: translate(98px, -0px);"></i>
      </div>
-     <button type="button" class="log-out" onclick="logout()" title="Sair">
-      <i class="fas fa-sign-out"></i>
-     </button>
       <div class="openModal-body">
        <button class="open-modal" onclick="openEmailSender()">
          <i class="ri-mail-send-line" style="color: #4285f4; font-weight: bold; font-size: 30px;"></i>
@@ -26,27 +23,38 @@
   </header>
 
   <div class="menu">
-    <div class="v-geral" onclick="window.location.href = './resultados-emails.html'" style="font-size: 12px; color: #205266; font-weight: bold; background-color: whitesmoke; display: flex; flex-direction: row; border-bottom: 1px solid #ccc; width: 100%; height: 50px; align-content: center; padding-left: 10px; padding-top: 15px; gap: 12px;" title="Ir ate o dashboard de visualização geral dos dados.">
-     <p>
+    <div class="v-geral" onclick="window.location.href = './resultados-emails.html'" style="font-size: 12px; color: #205266; font-weight: bold; background-color: whitesmoke; display: flex; flex-direction: row; border-bottom: 1px solid #ccc; width: 100%; height: 30px; align-items: center; padding-left: 10px; gap: 12px;" title="Ir ate o dashboard visao geral">
       Visão geral
      </p>
     </div>
-    <div class="v-geral" onclick="window.location.href = './dashboard.html'" style="font-size: 12px; color: #205266; font-weight: bold; background-color: whitesmoke; display: flex; flex-direction: row; border-bottom: 1px solid #ccc; width: 100%; height: 50px; align-content: center; padding-left: 10px; padding-top: 15px; gap: 12px;" title="Ir ate o dashboard principal">
+    <div class="v-geral" onclick="window.location.href = './dashboard.html'" style="font-size: 12px; color: #205266; font-weight: bold; background-color: whitesmoke; display: flex; flex-direction: row; border-bottom: 1px solid #ccc; width: 100%; height: 30px; align-items: center; padding-left: 10px; gap: 12px;" title="Ir ate o dashboard principal">
      <p>
       Dashboard main 
      </p>
      <i class="fas fa-chart-line" style="font-size: 17px; color: #2196f7; margin-top: px; "></i>
     </div>
-     <div class="v-geral" onclick="window.location.href = './manager.html'" style="font-size: 12px; color: #205266; font-weight: bold; background-color: whitesmoke; display: flex; flex-direction: row; border-bottom: 1px solid #ccc; width: 100%; height: 50px; align-content: center; padding-left: 10px; padding-top: 15px; gap: 12px;" title="Visualizar os erros de envio de emails">
+     <div class="v-geral" onclick="window.location.href = './manager.html'" style="font-size: 12px; color: #205266; font-weight: bold; background-color: whitesmoke; display: flex; flex-direction: row; border-bottom: 1px solid #ccc; width: 100%; height: 30px; align-items: center; padding-left: 10px; gap: 12px;" title="Visualizar os erros de envio de emails">
      <p>
       logs manager
      </p>
      <i class="fas fa-server" style="font-size: 17px; color: #2196f7; margin-top: px;"></i>
     </div>
+    <button type="button" class="log-out" onclick="logout()" title="Sair">
+      <i class="fas fa-sign-out"></i>
+     </button>
   </div>
 
   <form id="formSmtp">
     <div class="div-form">
+      <select id="template">
+        <option value="">Selecione um Template</option>
+        <option value="template1">Boas-vindas</option>
+        <option value="template2">Promoção</option>
+        <option value="vazio">Texto Puro</option>
+      </select>
+      <div id="preview-container">
+        <small>hhhhhh</small>
+      </div>
       <button type="button" class="close-form" onclick="closeForm()" title="Fechar formulario de envio">
            <i class="fas fa-sign-out" style="color: #fff; font-size: 12px;"></i>
       </button>
@@ -89,17 +97,36 @@ menu.addEventListener('click', () => {
   menu.classList.toggle("ativo");
 });
 
+const htmlTemplates = {
+  template1: `
+    <div style="font-family: sans-serif; border: 1px solid #4285f4; padding: 20px;">
+      <h1 style="color: #4285f4;">Bem-vindo!</h1>
+      <p>Olá, estamos felizes em ter você conosco.</p>
+    </div>`,
+  template2: `
+    <div style="background-color: #f44336; color: white; padding: 20px; text-align: center;">
+      <h1>Oferta Especial!</h1>
+      <p>Confira nossos descontos exclusivos de hoje.</p>
+    </div>`,
+  vazio: ""
+};
+
 const form = document.querySelector('#formSmtp');
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
+
+  const templateKey = document.querySelector('#template').value;
+  
+  const htmlContent = htmlTemplates[templateKey] || "sem conteudo..";
 
   const data = {
     nome: document.querySelector('#nome').value,
     remetente: document.querySelector('#remetente').value,
     destinatario: document.querySelector('#destinatario').value,
     senha_app: document.querySelector('#senha_app').value,
-    assunto: document.querySelector('#assunto').value
+    assunto: document.querySelector('#assunto').value,
+    template: htmlContent
   };
 
   try {

@@ -80,9 +80,12 @@ const botaoFetch = document.querySelector('.buscar');
 
 async function buscarDados() {
   try {
-    const response = await fetch('http://localhost:5500/api/buscar/envios', {
+    const response = await fetch(`http://localhost:5500/api/buscar/envios?t=${Date.now()}`, {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache'
+      },
     });
 
     if (response.status === 404) { alert('Dados não encontrados.'); return; }
@@ -151,40 +154,40 @@ conteinerDados2.addEventListener('click', async (e) => {
 window.onload = buscarDados;
 botaoFetch.onclick = buscarDados;
 
+setInterval(buscarDados, 5000);
+
 async function deletarItem(id) {
+
   try {
     const resposta = await fetch(`http://localhost:5500/api/deletar/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      method: 'DELETE'
     });
-
-    const dados = await resposta.json();
+    
 
     if (!resposta.ok) {
-      throw new Error(dados.erro || 'Erro ao deletar');
+      throw new Error('Servidor recusou o delete. Verifique o Back-end!');
     }
 
-    console.log(dados.mensagem);
-    document.getElementById(`item-${id}`).remove();
+    const elemento = document.getElementById(`item-${id}`);
+    if (elemento) {
+      elemento.remove();
+      console.log('Sumindo da tela o item:', id);
+    } else {
+      console.warn('Não achei na tela a div com id: item-' + id);
+    }
 
   } catch (erro) {
     console.error('Erro:', erro);
-    alert(erro.message);
+    alert('Erro ao deletar: ' + erro.message);
   }
+
 }
 
 const token = localStorage.getItem('token_acesso');
 
 if (!token) {
     alert("Acesso negado! Faça login primeiro.");
-    window.location.href = "login.html";
-}
-
-function logout() {
-    localStorage.removeItem('token_acesso');
-    window.location.href = "login.html";
+    window.location.href = "redirect.html";
 }
 
         </script>
