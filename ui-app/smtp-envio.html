@@ -16,10 +16,13 @@
        <i class="fas fa-cloud" style="color: #4285f4; font-size: 25px; font-weight: bold; display: flex; position: absolute; transform: translate(98px, -0px);"></i>
      </div>
       <div class="openModal-body">
-       <button class="open-modal" onclick="openEmailSender()">
-         <i class="ri-mail-send-line" style="color: #4285f4; font-weight: bold; font-size: 30px;"></i>
+       <button class="open-modal" onclick="openEmailSender()" title="Enviar email">
+         <i class="ri-mail-send-line" style="color: #4285f4; font-weight: bold; font-size: 20px;"></i>
        </button>
-     </div>
+      </div>
+      <button class="perfil-user" title="Ver dados gerais da sua conta.">
+        <i class="fas fa-user" style="color: #fff; font-size: 20px; color: #4285f4;"></i>
+      </button>
   </header>
 
   <div class="menu">
@@ -46,14 +49,7 @@
 
   <form id="formSmtp">
     <div class="div-form">
-      <select id="template">
-        <option value="">Selecione um Template</option>
-        <option value="template1">Boas-vindas</option>
-        <option value="template2">Promoção</option>
-        <option value="vazio">Texto Puro</option>
-      </select>
       <div id="preview-container">
-        <small>hhhhhh</small>
       </div>
       <button type="button" class="close-form" onclick="closeForm()" title="Fechar formulario de envio">
            <i class="fas fa-sign-out" style="color: #fff; font-size: 12px;"></i>
@@ -64,8 +60,15 @@
          <input type="text" id="destinatario" placeholder="Email do destinatario">
          <input type="text" id="senha_app" placeholder="Sua senha de app">
          <textarea type="text" id="assunto" placeholder="Seu assunto"></textarea>
+      <select id="template">
+        <option value="">Selecione um Template</option>
+        <option value="template1">Boas-vindas</option>
+        <option value="template2">Promoção</option>
+        <option value="vazio">Texto Puro</option>
+      </select>
       </div>
       <button class="submit" type="submit" form="formSmtp">
+         Enviar email
          <i class="fas fa-paper-plane" style="color: #fff; font-size: 12px; object-fit: fill;" title="Enviar template"></i>
       </button>
     </div>
@@ -97,19 +100,39 @@ menu.addEventListener('click', () => {
   menu.classList.toggle("ativo");
 });
 
-const htmlTemplates = {
+const htmlrender = {
   template1: `
-    <div style="font-family: sans-serif; border: 1px solid #4285f4; padding: 20px;">
-      <h1 style="color: #4285f4;">Bem-vindo!</h1>
-      <p>Olá, estamos felizes em ter você conosco.</p>
+    <div style="font-family: Arial; border: 1px solid #4285f4; border-radius: 10px; overflow: hidden; width: 100%; height; 100%; display: flex; position: relative; margin: auto; margin-top: 400px;">
+      <div style="background: #4285f4; color: white; padding: 15px; text-align: center;">
+        <h2 style="margin:0;">Bem-vindo!</h2>
+      </div>
+      <div style="padding: 20px; color: #333;">
+        <p>Olá! Ficamos muito felizes em ver você por aqui.</p>
+        <button style="background: #4285f4; color: white; border: none; padding: 10px 20px; border-radius: 5px;">Acessar Conta</button>
+      </div>
     </div>`,
+  
   template2: `
-    <div style="background-color: #f44336; color: white; padding: 20px; text-align: center;">
-      <h1>Oferta Especial!</h1>
-      <p>Confira nossos descontos exclusivos de hoje.</p>
-    </div>`,
-  vazio: ""
+    <div style="font-family: Arial; border: 2px solid #f4c20d; padding: 20px; text-align: center; background-color: #fffde7; width: 100%; height; 100%;">
+      <h1 style="color: #db4437;">🔥 OFERTA EXCLUSIVA 🔥</h1>
+      <p style="font-size: 18px;">Você ganhou <strong>50% de desconto</strong> no seu próximo envio!</p>
+      <div style="background: #db4437; color: white; padding: 10px; display: inline-block; font-weight: bold; ">CUPOM: ESTUDANTE10</div>
+    </div>`
 };
+
+const selectElement = document.getElementById('template');
+const previewContainer = document.getElementById('preview-container');
+
+selectElement.addEventListener('change', (e) => {
+    const selectedKey = e.target.value;
+    
+    if (selectedKey && htmlrender[selectedKey]) {
+
+        previewContainer.innerHTML = htmlrender[selectedKey];
+    } else {
+        previewContainer.innerHTML = '';
+    }
+});
 
 const form = document.querySelector('#formSmtp');
 
@@ -118,7 +141,7 @@ form.addEventListener('submit', async (e) => {
 
   const templateKey = document.querySelector('#template').value;
   
-  const htmlContent = htmlTemplates[templateKey] || "sem conteudo..";
+  const htmlContent = htmlrender[templateKey] || "sem conteudo..";
 
   const data = {
     nome: document.querySelector('#nome').value,

@@ -267,13 +267,9 @@ def postar_envios():
         msg['To'] = data['destinatario']
         msg['Subject'] = data['assunto']
 
-      
         nome_template = data.get('template')
 
-        with open(f'template/{nome_template}.html', 'r', encoding='utf-8') as f:
-            html_body = f.read()
-
-        msg.attach(MIMEText(html_body, 'html'))
+        msg.attach(MIMEText(nome_template, 'html'))
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
@@ -332,6 +328,12 @@ def criar_user():
         
         senha_hash = generate_password_hash(senha)
 
+        cursor.execute('SELECT id FROM usuarios WHERE nome = ?', (nome,))
+        existe = cursor.fetchone()
+
+        if existe:
+           return jsonify({"erro": "Usuário já existe"}), 409
+
         cursor.execute('''
             INSERT INTO usuarios (nome, senha, data_criacao)
             VALUES (?, ?, ?)
@@ -339,6 +341,29 @@ def criar_user():
         
         conn.commit()
         conn.close()
+
+        try:
+            email_usuario = data.get('email') 
+
+            msg = MIMEMultipart()
+            msg['From'] = os.getenv("EMAIL_SISTEMA")
+            msg['To'] = email_usuario
+            msg['Subject'] = "Bem-vindo ao Sistema!"
+
+            with open('template/boas_vindas.html', 'r', encoding='utf-8') as f:
+                html_body = f.read()
+
+            html_body = html_body.replace("{{nome}}", nome)
+            msg.attach(MIMEText(html_body, 'html'))
+
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(os.getenv("EMAIL_SISTEMA"), os.getenv("SENHA_APP_SISTEMA"))
+            server.send_message(msg)
+            server.quit()
+            
+        except Exception as e_mail:
+            print(f"Usuário criado, mas o email deu erro: {e_mail}")
 
         return jsonify({"status": "sucesso"}), 201
     
@@ -358,6 +383,8 @@ def login():
     data = request.get_json()
     nome = data.get('nome')
     senha = data.get('senha')
+
+    senha = generate_password_hash(senha)
 
     conn = sqlite3.connect('SSbanco.db')
     cursor = conn.cursor()

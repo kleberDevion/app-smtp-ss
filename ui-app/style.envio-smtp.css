@@ -43,13 +43,21 @@ body, html {
   height: 50px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  display: flex;
+  right: 20px;
+}
+
+.open-modal:hover {
+  cursor: pointer;
+  transform: translateY(-4px);
 }
 
 .open-modal {
-  width: 50px;
-  height: 50px;
-  border: none;
-  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #2196f3;
+  border-radius: 8px;
   background: transparent;
   cursor: pointer;
 }
@@ -81,24 +89,26 @@ body, html {
   gap: 20px;
   position: absolute;
   left: 0;
+  top: 10px;
   padding-left: 30px;
 }
 
 .submit {
-  width: 40px;
+  width: 160px;
   height: 40px;
   border: none;
-  border-radius: 50%;
+  border-radius: 5px;
   background: #4285f4;
   color: white;
   font-weight: bold;
-  font-size: 10px;
+  font-size: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   bottom: 6px;
   right: 6px;
+  gap: 7px;
   position: absolute;
 }
 
@@ -122,16 +132,15 @@ body, html {
 }
 
 .div-form {
-  width: 1400px;
+  width: 1100px;
   height: 100%;
-  border: none;
-  border-radius: 8px;
+  border: 1px solid #ccc;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: whitesmoke;
-  position: relative;
+  position: absolute;
   z-index: 1;
   top: 0;
   right: 0;
@@ -281,25 +290,25 @@ body, html {
 }
 
 #template {
-  width: 600px;
+  width: 300px;
   height: 50px;
   background: whitesmoke;
   border: 2px solid #ccc;
   z-index: 10;
   display: flex;
   position: absolute;
-  right: 20px;
-  top: 80px;
+  left: 30px;
+  bottom: -70px;
 }
 
 #preview-container {
-    width: 400px;
-    height: 400px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    width: 700px;
+    height: 610px;
+    border: none;
     display: flex;
-    position: relative;
-    right: 7px;
+    position: absolute;
+    left: 345px;
+    top: 10px;
 }
 
 .head {
@@ -307,4 +316,23 @@ body, html {
   height: 80px;
   background: #2196f3;
   border-radius: 8px;
+}
+
+.perfil-user {
+  border: 1px solid #2196f3;
+  display: flex;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 80px;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.perfil-user:hover {
+  cursor: pointer;
+  transform: translateY(-4px);
 }
