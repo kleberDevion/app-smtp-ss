@@ -140,6 +140,30 @@ def grafico_tabela():
             conn.close()
         print(f"ERRO NO SERVIDOR: {str(e)}") 
         return jsonify({"erro": str(e)}), 500
+    
+@app.route('/api/emails/enviados', methods=['GET'])
+def pesquisa_tabela():
+    conn = None
+    try:
+        conn = get_db_connection()
+        conn.row_factory = sqlite3.Row 
+        cursor = conn.cursor()
+    
+        query = """
+            SELECT id, remetente FROM emails
+        """
+        cursor.execute(query)
+        dados = [dict(row) for row in cursor.fetchall()]     
+        conn.close()
+        
+        return jsonify(dados)
+
+    except Exception as e:
+        if conn:
+            conn.close()
+        print(f"ERRO NO SERVIDOR: {str(e)}") 
+        return jsonify({"erro": str(e)}), 500
+
 
 @app.route('/api/trazer/logs_erro', methods=['GET'])
 def trazer_logs():
@@ -384,8 +408,6 @@ def login():
     nome = data.get('nome')
     senha = data.get('senha')
 
-    senha = generate_password_hash(senha)
-
     conn = sqlite3.connect('SSbanco.db')
     cursor = conn.cursor()
     
@@ -403,6 +425,7 @@ def login():
           "status": "sucesso",
           "mensagem": "Login realizado!",
           "usuario_id": usuario[0],
+          "nome": usuario[1],
           "token": token
        }), 200
     

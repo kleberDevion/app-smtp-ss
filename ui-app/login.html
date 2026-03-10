@@ -55,7 +55,8 @@ formLogin.addEventListener('submit', async (e) => {
 const result = await response.json();
 
 if (response.ok) {
-    localStorage.setItem('token_acesso', result.token); 
+    localStorage.setItem('token_acesso', result.token);
+    localStorage.setItem('userName', result.nome); 
     alert('Logado com sucesso!');
     window.location.href = 'smtp-envio.html';
 }
