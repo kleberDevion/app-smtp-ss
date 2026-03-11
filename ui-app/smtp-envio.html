@@ -49,8 +49,6 @@
 
   <form id="formSmtp">
     <div class="div-form">
-      <div id="preview-container">
-      </div>
       <button type="button" class="close-form" onclick="closeForm()" title="Fechar formulario de envio">
            <i class="fas fa-sign-out" style="color: #fff; font-size: 12px;"></i>
       </button>
@@ -72,30 +70,96 @@
          <i class="fas fa-paper-plane" style="color: #fff; font-size: 12px; object-fit: fill;" title="Enviar template"></i>
       </button>
     </div>
+    <div id="preview-container"></div>
   </form>
+
+   <div class="profile-items">
+      <div class="photo" onclick="document.getElementById('file-input').click()">
+          
+    <img id="preview-img" src="" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;">
+
+    <input type="file" id="file-input" accept="image/*" 
+        style="position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;"
+        onchange="
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.getElementById('preview-img');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    localStorage.setItem('userPhoto', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        ">
+
+      </div>
+      <div id="user-name"></div> 
+     <div class="search-bar">
+      <i class="fas fa-search">
+      </i>
+      <input type="search" id="search-input" placeholder="Pesquisar..." autocomplete="off">
+     </div>
+   </div>
  
-  <div class="content-profile">
-    <div class="profile-items">
-      <div class="photo">
-        <div id="user-name">kleber.admin</div>
-      </div>
-
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Pesquisar...">
-        <div class="results-list"></div>
-      </div>
-    </div>
-
-    <div class="card-dash">
-      <div class="card"></div>
-      <div class="card"></div>
-      <div class="card"></div>
-    </div>
-  </div>
+     <div class="content-profile">
+       <div class="card-dash">
+        <div id="results" class="results-list">
+          
+        </div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+       </div>
+     </div>
 
   <footer class="rodape"></footer>
 
   <script>
+
+const card_name = document.getElementById('user-name');
+
+function carregarNome() {
+    const nomeSalvo = localStorage.getItem('userName');
+    if (nomeSalvo) {
+        card_name.innerText = nomeSalvo;
+    }
+}
+
+const input = document.getElementById('search-input');
+const resultsDiv = document.getElementById('results');
+
+input.addEventListener('input', async (e) => {
+  const query = e.target.value;
+  console.log('clicouooooo')
+
+   const isNumber = query.length > 0 && !isNaN(query);
+
+  if (query.length === 0 || (query.length < 2 && isNaN(query))) { 
+    resultsDiv.innerHTML = '';
+    return;
+  }
+
+  const response = await fetch(`http://localhost:5500/api/emails/enviados?q=${query}`);
+  const data = await response.json();
+
+  resultsDiv.innerHTML = data.map(item => `
+    <div style="background: #1a1f2e; width: 100%; height: 30px; align-items: center; padding-left: 10px; color: green; border-bottom: 2px solid #ccc; padding-top: 3px;">ID De numero: ${item.id}</div>
+    <div style="width: 100%; height: 60px; border: 2px solid #ccc; display: flex; flex-direction: column; bottom: 0; background: #fff; color: #000; font-weight: bold;">
+      <h5 style="padding-left: 10px;">Remetente</h5>
+      <div style="background: whitesmoke; width: 100%; height: 30px; color: #205266; padding-left: 10px; border: none; display: flex; bottom: 0; align-items: center;">${item.remetente}</div>
+    </div>
+  `).join('');
+});
+
 
 function openEmailSender() {
   const form = document.querySelector('#formSmtp');
@@ -120,7 +184,7 @@ menu.addEventListener('click', () => {
 
 const htmlrender = {
   template1: `
-    <div style="font-family: Arial; border: 1px solid #4285f4; border-radius: 10px; overflow: hidden; width: 100%; height; 100%; display: flex; position: relative; margin: auto; margin-top: 400px;">
+    <div style="font-family: Arial; border: 1px solid #4285f4; border-radius: 10px; overflow: hidden; width: 100%; height: 100%; background: #fff;">
       <div style="background: #4285f4; color: white; padding: 15px; text-align: center;">
         <h2 style="margin:0;">Bem-vindo!</h2>
       </div>
@@ -195,15 +259,20 @@ form.addEventListener('submit', async (e) => {
 
 const token = localStorage.getItem('token_acesso');
 
-if (!token) {
-    alert("Acesso negado! Faça login primeiro.");
-    window.location.href = "login.html";
-}
+window.onload = () => {
+    const token = localStorage.getItem('token_acesso');
+    if (!token) {
+        alert("Acesso negado! Faça login primeiro.");
+        window.location.href = './login.html';
+    }
+};
 
 function logout() {
     localStorage.removeItem('token_acesso');
-    window.location.href = "login.html";
+    window.location.href = './login.html';
 }
+
+carregarNome();
 
   </script>
 </body>
