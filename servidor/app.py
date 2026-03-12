@@ -353,7 +353,7 @@ def criar_user():
         senha_hash = generate_password_hash(senha)
 
         cursor.execute('SELECT id FROM usuarios WHERE nome = ?', (nome,))
-        existe = cursor.fetchone()
+        existe = cursor.fetchone() # possivel erro de dizer que existe sem existir. olha aqui seu burro Kleber.
 
         if existe:
            return jsonify({"erro": "Usuário já existe"}), 409
@@ -385,7 +385,8 @@ def criar_user():
             server.login(os.getenv("EMAIL_SISTEMA"), os.getenv("SENHA_APP_SISTEMA"))
             server.send_message(msg)
             server.quit()
-            
+
+              
         except Exception as e_mail:
             print(f"Usuário criado, mas o email deu erro: {e_mail}")
 

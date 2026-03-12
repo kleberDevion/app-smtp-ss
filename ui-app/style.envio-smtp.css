@@ -477,6 +477,16 @@ body, html {
   z-index: 40;
 }
 
+.pages {
+  width: 100%;
+  height: 30px;
+  background: #e3e9f7;
+  outline: none;
+  border: none;
+  font-size: bold;
+  font-family: 'Poppins';
+}
+
 @media screen and (max-width: 768px) {
   body, html {
     padding-left: 0 !important; 

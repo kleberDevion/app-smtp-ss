@@ -137,7 +137,6 @@ async function buscarDados() {
 
   } catch (error) {
     console.error('Erro na requisição:', error);
-    alert('Erro ao buscar dados: ' + error.message);
   }
 }
 
@@ -187,7 +186,7 @@ const token = localStorage.getItem('token_acesso');
 
 if (!token) {
     alert("Acesso negado! Faça login primeiro.");
-    window.location.href = "redirect.html";
+    window.location.href = "./redirect.html";
 }
 
         </script>
