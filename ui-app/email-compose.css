@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100vw;
+    height: 100vh;
+    background: whitesmoke;
+    z-index: 1;
+    padding-left: 160px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.body-items {
+    width: 1890px;
+    height: 100%;
+    display: flex;
+    background: #e9e3e3;
+    position: absolute;
+    right: 0;
+    top: 0;
+    flex-direction: column;
+}
+
+.menu-email {
+    width: 240px;
+    height: 100%;
+    display: flex;
+    position: absolute;
+    left: 0;
+    top: 0;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: #fff;
+    border-right: 1px solid #ccc;
+    gap: 20px;
+}
+
+.logo-body {
+    width: 100%;
+    height: 60px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding-left: 5px;
+    padding-top: 10px;
+}
+
+#search-input {
+   width: 160px;
+   height: 30px;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   display: flex;
+   transform: translate(70px, 7px);
+   padding-left: 10px;
+   flex-direction: row;
+   position: absolute;
+   gap: 7px;
+   outline: none;
+}
+
+.logo {
+   width: 40px;
+   height: 40px;
+   border-radius: 50%;
+   border: 1px solid #ccc;
+   background-image: url('logoss.jpg');
+   background-position: center;
+   background-repeat: no-repeat;
+   background-size: cover;
+}
+
+.inbox {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding-left: 5px;
+    align-items: center;
+    font-family: sans-serif;
+    cursor: pointer;
+}
+
+.sent {
+    width: 100%;
+    height: 50px;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding-left: 5px;
+    align-items: center;
+    cursor: pointer;
+    font-family: sans-serif;
+}
+
+.sent-later {
+    width: 100%;
+    height: 50px;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding-left: 5px;
+    align-items: center;
+    font-family: sans-serif;
+    cursor: pointer;
+}
+
+.sent-mail {
+    width: 100%;
+    height: 50px;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding-left: 5px;
+    align-items: center;
+    font-family: sans-serif;
+    cursor: pointer;
+}
+
+.workspace {
+    width: 100%;
+    height: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #d8d7d7;
+    font-family: sans-serif;
+    cursor: pointer;
+    border-bottom: 1px solid #ccc;
+    background: #fff;
+    align-items: flex-start;
+    overflow: hidden;
+    padding-bottom: 23px;
+}
+
+.mail-list-div {
+    width: 100%;
+    height: 50px;
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.mail-list-div:hover {
+    transform: translateY(1px);
+    background: #d8d7d7;
+    cursor: pointer;
+}
+
+.inbox:hover {
+    transform: translateY(1px);
+    background: #d8d7d7;
+    cursor: pointer;
+}
+
+.sent:hover {
+    transform: translateY(1px);
+    background: #d8d7d7;
+    cursor: pointer;
+}
+
+.sent-later:hover {
+    transform: translateY(1px);
+    background: #d8d7d7;
+    cursor: pointer;
+}
+
+.sent-mail:hover {
+    transform: translateY(1px);
+    background: #d8d7d7;
+    cursor: pointer;
+}
+
+.workspace:hover {
+    display: flex;
+    position: absolute;
+    z-index: 300;
+    height: 300px;
+    top: 60px;
+    left: 0;
+    align-items: flex-start;
+    flex-direction: column;
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+    padding-top: 10px;
+    gap: 20px;
+}
+
+.auxiliar-menu {
+    width: 100%;
+    height: auto;
+    align-items: center;
+}
+
+.sistema-route {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    cursor: pointer;
+    color: #d8d7d7;
+}
+
+.sistema-route:hover {
+    transform: translateY(1px);
+    background: #cacbcc;
+    cursor: pointer;
+    color: #2196f7;
+}

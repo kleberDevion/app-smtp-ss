@@ -193,28 +193,29 @@ def deletar_item(id_item):
     try:
         conn = sqlite3.connect('SSbanco.db')
         cursor = conn.cursor()
-
         cursor.execute("DELETE FROM emails WHERE id = ?", (id_item,))
         deletados_emails = cursor.rowcount
-
         cursor.execute("DELETE FROM logs_erro WHERE id = ?", (id_item,))
         deletados_logs = cursor.rowcount
 
         if deletados_emails == 0 and deletados_logs == 0:
-            return {"erro": "Item não existe em nenhuma tabela."}, 404
+            return {"erro": "Item não encontrado em nenhuma tabela."}, 404
 
         conn.commit()
         return {"mensagem": "Item deletado com sucesso"}, 200
 
     except Exception as e:
-        if conn: conn.rollback()
-        return {"erro": f"Erro ao deletar: {str(e)}"}, 500
+        if conn: 
+            conn.rollback()
+        print(f"ERRO CRÍTICO NO BANCO: {str(e)}") 
+        return {"erro": f"Erro interno no banco: {str(e)}"}, 500
     finally:
         if conn:
             conn.close()
 
-@app.route('/api/deletar/<int:id>', methods=['DELETE'])
-def route_delete(id):
+
+@app.route('/api/deletar/<int:id>', methods=['DELETE', 'OPTIONS'])
+def delete_item(id):
 
     print(f"REQUISIÇÃO ROTA: 'DELETE' : {datetime.now()}")
 

@@ -2,41 +2,46 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="./logo.png">
     <link rel="stylesheet" href="style.envio-smtp.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>kleberdevion.com</title>
+    <title>ss-smtp.com</title>
 </head>
 <body>
   
   <header class="topo">
      <div class="title-body">
-       <h2 class="title"><strong>SmtpSender</strong></h2>
-       <i class="fas fa-cloud" style="color: #4285f4; font-size: 25px; font-weight: bold; display: flex; position: absolute; transform: translate(98px, -0px);"></i>
+       <h2 class="title">SS-SENDER</h2>
+       <i class="ri-mail-send-line" style="color: #4285f4; font-size: 25px; font-weight: bold;"></i>
      </div>
       <div class="openModal-body">
        <button class="open-modal" onclick="openEmailSender()" title="Enviar email">
          <i class="ri-mail-send-line" style="color: #4285f4; font-weight: bold; font-size: 20px;"></i>
        </button>
       </div>
-      <button class="perfil-user" title="Ver dados gerais da sua conta.">
-        <i class="fas fa-user" style="color: #fff; font-size: 20px; color: #4285f4;"></i>
+      <button class="perfil-user" title="Ver dados gerais da sua conta." onclick="">
+        <i class="fas fa-user" style="color: #fff; font-size: 20px; color: #4285f4"></i>
       </button>
   </header>
 
-  <div class="menu">
-    
+  <div class="menu"> 
     <select class="pages" aria-valuetext="Dashboards" onchange="if (this.value) window.location.href = this.value;">
       <option value="./resultados-emails.html">Dashboard visao geral </option>
       <option value="./dashboard.html">Dashbboard main <i class="fas fa-chart-line" style="font-size: 17px; color: #2196f7; margin-top: px; "></i></option>
-      <option value="./manager.html">Dashboard envios falhos <i class="fas fa-server" style="font-size: 17px; color: #2196f7; margin-top: px;"></i></option>    
+      <option value="./manager.html">Dashboard envios falhos <i class="fas fa-server" style="font-size: 17px; color: #2196f7; margin-top: px;"></i></option>
+      <option value="./inbox.html">Envio de emails<i class="fas fa-server" style="font-size: 17px; color: #2196f7; margin-top: px;"></i></option>    
     </select>
-
+   <div class="control">
     <button type="button" class="log-out" onclick="logout()" title="Sair">
       <i class="fas fa-sign-out"></i>
      </button>
+      <div id="user-name" title="Seu nome de usuario"></div> 
+   </div>
   </div>
+
+  <!--ITEMS QUE NAO SOMEN, AO USAR O TOGGLE.MODE-->
 
   <form id="formSmtp">
     <div class="div-form">
@@ -64,29 +69,8 @@
     <div id="preview-container"></div>
   </form>
 
+<div class="page-home">
    <div class="profile-items">
-      <div class="photo" onclick="document.getElementById('file-input').click()">
-          
-    <img id="preview-img" src="" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;">
-
-    <input type="file" id="file-input" accept="image/*" 
-        style="position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;"
-        onchange="
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = document.getElementById('preview-img');
-                    img.src = e.target.result;
-                    img.style.display = 'block';
-                    localStorage.setItem('userPhoto', e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        ">
-
-      </div>
-      <div id="user-name"></div> 
      <div class="search-bar">
       <i class="fas fa-search">
       </i>
@@ -96,9 +80,7 @@
  
      <div class="content-profile">
        <div class="card-dash">
-        <div id="results" class="results-list">
-          
-        </div>
+        <div id="results" class="results-list"></div>
         <div class="card"></div>
         <div class="card"></div>
         <div class="card"></div>
@@ -111,10 +93,12 @@
         <div class="card"></div>
        </div>
      </div>
+</div>
 
-  <footer class="rodape"></footer>
+<footer class="rodape"></footer>
+  
+<script>
 
-  <script>
 
 const card_name = document.getElementById('user-name');
 

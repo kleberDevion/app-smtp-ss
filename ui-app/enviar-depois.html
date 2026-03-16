@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="./logo.png">
+    <link rel="stylesheet" href="email-compose.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Envio(Enviar depois) - ss</title>
+  </head>
+  <body>
+
+    <div class="body-items">
+      
+    </div>
+
+    <nav class="menu-email">
+      <div class="logo-body">
+        <div class="logo">
+
+        </div>
+        <input type="search" id="search-input" placeholder="Pesquisar..." autocomplete="off">
+      </div>
+      </div>
+      <div class="workspace" onclick="redirectInbox()">
+        <div style="width: auto; height: auto; display: flex; gap: 10px; align-items: center;">
+         <i class="ri-bar-chart-horizontal-line"></i>
+         <h5 style="font-size: 12px; color: #b9b9b9;">Workspace [Emails]</h5>
+        </div>
+        <a  href="smtp-envio.html" style="display: block; width: 100%; height: 100%; text-decoration: none; z-index: 9999; position: relative;">
+        <div class="sistema-route" onclick="console.log('Clicou!'); window.location.href = './smtp-envio.html';">
+          <div style="width: auto; height: auto; display: flex; gap: 10px; align-items: center;">
+            <i class="ri-bar-chart-horizontal-line"></i>
+            <h5 style="font-size: 12px;">Workspace [Manager]</h5>
+          </div>
+        </div>
+        </a>
+      </div>
+    <div class="auxiliar-menu">
+      <div class="inbox" onclick="redirectInbox()">
+        <i class="fas fa-inbox" style="font-size: 13px; color: #2196f7;"></i>
+        <h5 style="font-size: 12px;">inbox</h5>
+      </div>
+      <div class="sent" onclick="redirectEnviados()">
+        <i class="ri-mail-send-line" style="font-size: 15px; color: #2196f7;"></i>
+        <h5 style="font-size: 12px;">Enviados</h5>
+      </div>
+      <div class="sent-later" onclick="redirectEnviardepois()">
+        <i class="ri-record-mail-line" style="font-size: 15px; color: #2196f7;"></i>
+        <h5 style="font-size: 12px;">Enviar depois</h5>
+      </div>
+      <div class="sent-mail" onclick="redirectEnviaremail()">
+        <i class="ri-inbox-unarchive-line" style="font-size: 15px; color: #2196f7;"></i>
+        <h5 style="font-size: 12px;">Enviar email</h5>
+      </div>
+    </div>
+    </nav>
+  </body>
+  <script>
+
+   function redirectEnviardepois() {
+    window.location.href = './enviar-depois.html';
+  }
+
+  
+  function redirectInbox() {
+    window.location.href = './inbox.html';
+  }
+
+  function redirectEnviaremail() {
+    window.location.href = './enviar-email.html';
+  }
+
+  
+  function redirectEnviados() {
+    window.location.href = './enviados.html';
+  }
+
+ 
+  const conteinerDados = document.querySelector('.body-items');
+
+    conteinerDados.innerHTML = `
+      <div style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; position: absolute; top: 400px; left: 0; flex-direction: column; gap: 10px; font-family: sans-serif;">
+        <p style="margin: 0; color: #666; font-size: 14px;">Pagina em construção.</p>
+        <i class="ri-tools-line" style="font-size: 35px; color: #2196f7;"></i>
+      </div>
+    `;
+
+</script>
+
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="./logo.png">
+    <link rel="stylesheet" href="email-compose.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Envio(Inbox) - ss</title>
+  </head>
+  <body>
+
+    <div class="body-items">
+      
+    </div>
+
+    <nav class="menu-email">
+      <div class="logo-body">
+        <div class="logo">
+
+        </div>
+        <input type="search" id="search-input" placeholder="Pesquisar..." autocomplete="off">
+      </div>
+      <div class="workspace" onclick="redirectInbox()">
+        <div style="width: auto; height: auto; display: flex; gap: 10px; align-items: center;">
+         <i class="ri-bar-chart-horizontal-line"></i>
+         <h5 style="font-size: 12px;">Workspace [Emails]</h5>
+        </div>
+        <a  href="smtp-envio.html" style="display: block; width: 100%; height: 100%; text-decoration: none; z-index: 9999; position: relative;">
+        <div class="sistema-route" onclick="console.log('Clicou!'); window.location.href = './smtp-envio.html';">
+          <div style="width: auto; height: auto; display: flex; gap: 10px; align-items: center;">
+            <i class="ri-bar-chart-horizontal-line"></i>
+            <h5 style="font-size: 12px;">Workspace [Manager]</h5>
+          </div>
+        </div>
+        </a>
+      </div>
+    <div class="auxiliar-menu">
+      <div class="inbox" onclick="redirectInbox()">
+        <i class="fas fa-inbox" style="font-size: 13px; color: #2196f7;"></i>
+        <h5 style="font-size: 12px;">inbox</h5>
+      </div>
+      <div class="sent" onclick="redirectEnviados()">
+        <i class="ri-mail-send-line" style="font-size: 15px; color: #2196f7;"></i>
+        <h5 style="font-size: 12px;">Enviados</h5>
+      </div>
+      <div class="sent-later" onclick="redirectEnviardepois()">
+        <i class="ri-record-mail-line" style="font-size: 15px; color: #2196f7;"></i>
+        <h5 style="font-size: 12px;">Enviar depois</h5>
+      </div>
+      <div class="sent-mail" onclick="redirectEnviaremail()">
+        <i class="ri-inbox-unarchive-line" style="font-size: 15px; color: #2196f7;"></i>
+        <h5 style="font-size: 12px;">Enviar email</h5>
+      </div>
+    </div>
+    </nav>
+  </body>
+  <script>
+
+   function redirectEnviardepois() {
+    window.location.href = './enviar-depois.html';
+  }
+
+  
+  function redirectInbox() {
+    window.location.href = './inbox.html';
+  }
+
+  function redirectEnviaremail() {
+    window.location.href = './enviar-email.html';
+  }
+
+  
+  function redirectEnviados() {
+    window.location.href = './enviados.html';
+  }
+    
+  const conteinerDados = document.querySelector('.body-items');
+
+  async function buscarDados() {
+    try {
+      const response = await fetch(`http://localhost:5500/api/buscar/envios?t=${Date.now()}`, {
+        method: 'GET',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache'
+        },
+      });
+
+      if (response.status === 404) { console.warn('Dados não encontrados.'); return; }
+      if (response.status === 500) { console.error('Erro no servidor 500.'); return; }
+
+      const resultado = await response.json();
+      const lista = Array.isArray(resultado) ? resultado : [resultado];
+
+    if (lista.length === 0) {
+         exibirMensagemVazia() 
+      return;
+    }
+
+      const htmlContent = lista.map(dados => `
+       <div id="item${dados.id}" style="width: 100%; height: auto; display: flex; align-items: center; flex-direction: row; gap: 30px;  font-family: sans-serif; font-size: 12px;">
+       <div class="mail-list-div">
+         <i class="fas fa-inbox" style="font-size: 13px; color: #2196f7;"></i>
+         <p style="padding-right: 10px; border-left: 2px solid #2196f7; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; border-right: 1px solid #2196f7; border-radius: 5px; height: 30px; display: flex; align-items: center; padding-left: 10px;">De: [${dados.nome || 'Nao informado'} |  ${dados.remetente || 'Nao informado'}] | Para: [${dados.destinatario || 'Nao informado'}]ㅤㅤㅤㅤㅤㅤ | Horario: ${dados.data_envio}</p>
+          <button type="button" data-id="${dados.id}" class="btn-delete" onclick="deletarItem('${dados.id}')" style="border: 1px solid #ccc; border-radius: 2px; padding: 3px; color: #afafaf; position: absolute; right: 10px;">
+             <i class="fas fa-trash"></i>
+          </button>
+      </div>
+      </div>
+      `).join('');
+
+      conteinerDados.innerHTML = htmlContent;
+
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+       conteinerDados.innerHTML = '<p style="text-align: center; color: gray;">Erro desconhecido, olhe o console.</p>';
+    }
+  }
+
+  function exibirMensagemVazia() {
+    conteinerDados.innerHTML = `
+      <div style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; position: absolute; top: 400px; left: 0; flex-direction: column; gap: 10px; font-family: sans-serif;">
+        <p style="margin: 0; color: #666; font-size: 14px;">Nada aqui por enquanto.</p>
+       <i class="ri-mail-open-fill" style="font-size: 35px; color: #2196f7;"></i>
+      </div>
+    `;
+  }
+
+
+  window.addEventListener('DOMContentLoaded', buscarDados);
+
+async function deletarItem(id) {
+  if (!confirm('Deseja excluir essa desgraça?')) return;
+
+  try {
+    const res = await fetch(`http://localhost:5500/api/deletar/${id}`, { 
+      method: 'DELETE' 
+    });
+
+    if (res.ok) {
+      const elemento = document.getElementById(`item${id}`);
+      if (elemento) elemento.remove();
+    } else {
+      alert('Erro ao deletar no servidor.');
+    }
+  } catch (err) {
+    console.error('Erro na requisição:', err);
+  }
+}
+
+</script>
+
+</html>
