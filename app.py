@@ -16,7 +16,11 @@ load_dotenv()
 SECRET_WORD = os.getenv("SECRET_WORD")
 ROUTE_DB = os.getenv("DB_PATH")
 
-app = Flask(__name__)
+app = Flask(__name__, 
+            template_folder='ui-app', 
+            static_folder='ui-app', 
+            static_url_path='')
+
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 app.route('/')
