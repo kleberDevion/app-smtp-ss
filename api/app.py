@@ -19,6 +19,10 @@ ROUTE_DB = os.getenv("DB_PATH")
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
+app.route('/')
+def ola():
+    return "Server ta on!!"
+
 def verifica_token(token_recebido):
     try:
         dados = jwt.decode(token_recebido, SECRET_WORD, algorithms=["HS256"])
