@@ -11,9 +11,10 @@ from flask_cors import CORS
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-SECRET_WORD = os.getenv("SECRET_WORD")
-
 load_dotenv()
+
+SECRET_WORD = os.getenv("SECRET_WORD")
+ROUTE_DB = os.getenv("DB_PATH")
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -31,7 +32,7 @@ def serve_static(filename):
 
 
 def get_db_connection():
-    conn = sqlite3.connect('SSbanco.db')
+    conn = sqlite3.connect(ROUTE_DB)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -118,7 +119,7 @@ def grafico_tabela():
     conn = None
     try:
         conn = get_db_connection()
-        conn.row_factory = sqlite3.Row 
+       # conn.row_factory = sqlite3.Row 
         cursor = conn.cursor()
     
         query = """
@@ -146,7 +147,7 @@ def pesquisa_tabela():
     conn = None
     try:
         conn = get_db_connection()
-        conn.row_factory = sqlite3.Row 
+       # conn.row_factory = sqlite3.Row 
         cursor = conn.cursor()
     
         query = """
@@ -191,7 +192,7 @@ def trazer_logs():
 def deletar_item(id_item):
     conn = None
     try:
-        conn = sqlite3.connect('SSbanco.db')
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM emails WHERE id = ?", (id_item,))
         deletados_emails = cursor.rowcount
@@ -252,7 +253,7 @@ def validate_assunto(assunto):
 
 def registrar_erro(tipo_erro, erro_msg, remetente):
     try:
-        conn = sqlite3.connect('SSbanco.db')
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS logs_erro (
@@ -302,7 +303,7 @@ def postar_envios():
         server.send_message(msg)
         server.quit()
 
-        conn = sqlite3.connect('SSbanco.db')
+        conn = sqlite3.connect("SSbanco.db")
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO emails (nome, remetente, destinatario, senha_app, assunto, data_envio)
@@ -339,7 +340,7 @@ def criar_user():
     senha = data['senha'].replace(" ", "")
 
     try:
-        conn = sqlite3.connect('SSbanco.db')
+        conn = get_db_connection()
         cursor = conn.cursor()
         
         cursor.execute('''
@@ -410,7 +411,7 @@ def login():
     nome = data.get('nome')
     senha = data.get('senha')
 
-    conn = sqlite3.connect('SSbanco.db')
+    conn = get_db_connection()
     cursor = conn.cursor()
     
     cursor.execute('SELECT id, nome, senha FROM usuarios WHERE nome = ?', (nome,))
