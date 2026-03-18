@@ -11,7 +11,9 @@
   </head>
   <body>
 
-    <div class="body-items"></div>
+    <div class="body-items">
+
+    </div>
 
     <nav class="menu-email">
       <div class="logo-body">
@@ -80,11 +82,11 @@
 
   async function buscarDados() {
     try {
-      const response = await fetch(`http://localhost:5500/api/buscar/envios?t=${Date.now()}`, {
+      const response = await fetch(`http://localhost:5500/api/buscar/inbox?t=${Date.now()}`, {
         method: 'GET',
         headers: { 
           'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache'
+          'Authorization': localStorage.getItem('token_acesso')
         },
       });
 
@@ -98,7 +100,7 @@
       const htmlContent = dadosGlobal.map(dados => `
        <div id="item${dados.id}" class="mail-list-div" onclick="abrirEmail('${dados.id}')">>
          <i class="fas fa-inbox" style="font-size: 13px; color: #2196f7;"></i>
-         <p style="padding-right: 10px; border-left: 2px solid #2196f7; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; border-right: 1px solid #2196f7; border-radius: 5px; height: 30px; display: flex; align-items: center; padding-left: 10px;">De: [${dados.nome || 'Nao informado'} |  ${dados.remetente || 'Nao informado'}] | Para: [${dados.destinatario || 'Nao informado'}]ㅤㅤㅤㅤㅤㅤ | Horario: ${dados.data_envio}</p>
+         <p style="padding-right: 10px; border-left: 2px solid #2196f7; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; border-right: 1px solid #2196f7; border-radius: 5px; height: 100%; display: flex; align-items: center; padding-left: 10px;">De: [${dados.nome || 'Nao informado'} |  ${dados.remetente || 'Nao informado'}] | Para: [${dados.destinatario || 'Nao informado'}]ㅤㅤㅤㅤㅤㅤ | Horario: ${dados.data_envio}</p>
           <button type="button" data-id="${dados.id}" class="btn-delete" onclick="deletarItem('${dados.id}')" style="border: 1px solid #ccc; border-radius: 2px; padding: 3px; color: #afafaf; position: absolute; right: 10px;">
              <i class="fas fa-trash"></i>
           </button>

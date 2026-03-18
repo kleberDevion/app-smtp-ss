@@ -16,10 +16,7 @@ load_dotenv()
 SECRET_WORD = os.getenv("SECRET_WORD")
 ROUTE_DB = os.getenv("DB_PATH")
 
-app = Flask(__name__, 
-            template_folder='ui-app', 
-            static_folder='ui-app', 
-            static_url_path='')
+app = Flask(__name__)
 
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
@@ -30,7 +27,7 @@ def ola():
 def verifica_token(token_recebido):
     try:
         dados = jwt.decode(token_recebido, SECRET_WORD, algorithms=["HS256"])
-        return dados['usuario_id']
+        return dados
     except:
         return None
 
@@ -65,6 +62,28 @@ def buscar_envios():
 
     except sqlite3.Error:
         return jsonify({"erro": "Dados inexistentes."}), 404
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+    
+@app.route('/api/buscar/inbox', methods=['GET'])
+def buscar_inbox():
+    if request.method == 'OPTIONS':
+        return '', 200
+
+    token = request.headers.get('Authorization')
+    dados = verifica_token(token)
+    if not dados:
+        return jsonify({"erro": "Token inválido"}), 401
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, nome, remetente, destinatario, data_envio FROM emails WHERE remetente = ?', (dados['email'],))
+        rows = cursor.fetchall()
+        resultados = [dict(row) for row in rows]
+        conn.close()
+        return jsonify(resultados), 200
+
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
@@ -267,9 +286,8 @@ def registrar_erro(tipo_erro, erro_msg, remetente):
             CREATE TABLE IF NOT EXISTS logs_erro (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 tipo_erro TEXT,
-                erro_msg TEXT,
                 remetente TEXT,
-                data_hora TEXT
+                data_hora TEXT 
             )
         ''')
         cursor.execute('''
@@ -332,6 +350,8 @@ def postar_envios():
         registrar_erro("Erro Geral", erro_msg, data.get('remetente'))
         return jsonify({"erro": erro_msg}), 500
 
+
+
 @app.route('/api/criar/usuario', methods=['POST'])
 def criar_user():
     print(f"REQUISIÇÃO ROTA: 'POST' : {datetime.now()}")
@@ -356,11 +376,13 @@ def criar_user():
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               nome TEXT,
               senha TEXT,
+              email TEXT,
               data_criacao TEXT
             )
         ''')
         
         senha_hash = generate_password_hash(senha)
+        email_usuario = data.get('email')
 
         cursor.execute('SELECT id FROM usuarios WHERE nome = ?', (nome,))
         existe = cursor.fetchone() # possivel erro de dizer que existe sem existir. olha aqui seu burro Kleber.
@@ -369,9 +391,10 @@ def criar_user():
            return jsonify({"erro": "Usuário já existe"}), 409
 
         cursor.execute('''
-            INSERT INTO usuarios (nome, senha, data_criacao)
-            VALUES (?, ?, ?)
-        ''', (nome, senha_hash, datetime.now().isoformat())) 
+            INSERT INTO usuarios (nome, senha, email, data_criacao)
+            VALUES (?, ?, ?, ?)
+        ''', (nome, senha_hash, email_usuario, datetime.now().isoformat())
+        ) 
         
         conn.commit()
         conn.close()
@@ -418,18 +441,20 @@ def login():
     data = request.get_json()
     nome = data.get('nome')
     senha = data.get('senha')
+    email = data.get('email')
 
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    cursor.execute('SELECT id, nome, senha FROM usuarios WHERE nome = ?', (nome,))
+    cursor.execute('SELECT id, nome, senha, email FROM usuarios WHERE nome = ? AND email = ?', (nome, email))
     usuario = cursor.fetchone()
     conn.close()
 
     if usuario and check_password_hash(usuario[2], senha):
        payload = {
         "usuario_id": usuario[0],
-        "exp": datetime.utcnow() + timedelta(hours=2)
+        "email": usuario[3],
+        "exp": datetime.utcnow() + timedelta(hours=12)
        }
        token = jwt.encode(payload, SECRET_WORD, algorithm="HS256")
        return jsonify({
@@ -437,6 +462,7 @@ def login():
           "mensagem": "Login realizado!",
           "usuario_id": usuario[0],
           "nome": usuario[1],
+          "email": usuario[3], #precisa aqui ??
           "token": token
        }), 200
     

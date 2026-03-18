@@ -1,29 +1,31 @@
 import sqlite3
+import os
+from dotenv import load_dotenv
 
-def restaurar_banco():
+load_dotenv()
+ROUTE_DB = os.getenv("DB_PATH")
+
+def criar_tabelas():
     try:
-        conn = sqlite3.connect('SSbanco.db')
+        conn = sqlite3.connect(ROUTE_DB)
         cursor = conn.cursor()
-
-        # Cria a tabela logs_erro se ela não existir
+        
+        # SQL para criar a tabela de envios realizados
         cursor.execute('''
-            CREATE TABLE IF NOT EXISTS logs_erro (
+            CREATE TABLE IF NOT EXISTS emails_w_emails (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                tipo_erro TEXT,
-                mensagem TEXT,
-                remetente TEXT,
-                data_hora TEXT
+                destinatario TEXT NOT NULL,
+                assunto TEXT,
+                corpo TEXT,
+                data_hora TEXT NOT NULL
             )
         ''')
-
-        conn.commit()
-        print("✅ Tabela 'logs_erro' criada ou já existente com sucesso!")
         
+        conn.commit()
+        conn.close()
+        print("✅ Tabela 'envios_sucesso' criada ou já existente!")
     except Exception as e:
         print(f"❌ Erro ao criar tabela: {e}")
-    finally:
-        if conn:
-            conn.close()
 
 if __name__ == "__main__":
-    restaurar_banco()
+    criar_tabelas()

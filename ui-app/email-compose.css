@@ -25,6 +25,8 @@ body, html {
     right: 0;
     top: 0;
     flex-direction: column;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
 }
 
 .menu-email {
@@ -229,14 +231,16 @@ body, html {
 
 .main-div {
     width: 1820px;
-    height: 700px;
+    height: 1400px;
     background: transparent;
     display: flex;
-    transform: translate(30px, 40px);
     border-radius: 7px;
-    border: none;
+    border: 1px solid red;
     flex-direction: row;
     gap: 20px;
+    position: absolute;
+    left: 30px;
+    top: 40px;
 }
 
 .topo {
@@ -289,7 +293,7 @@ body, html {
 
 .add-infos {
   width: 299px;
-  height: 100%;
+  height: 300px;
   border: none;
   border-radius: 7px;
   background: whitesmoke;
@@ -297,8 +301,75 @@ body, html {
 
 .email-card {
     width: 1500px;
-    height: 100%;
+    height: 300px;
     background: whitesmoke;
     border-radius: 7px;
     border: 1px solid #ccc;
+}
+
+/* style for page of send emails */
+
+.bar {
+    width: 500px;
+    height: 48px;
+    background-color: whitesmoke;
+    font-size: 14px;
+    font-family: 'Poppins';
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    transform: translate(600px, 46px);
+    border-top-left-radius: 5px;
+    border-left: 1px solid #2196f7;
+    border-top: 1px solid #2196f7;
+    border-bottom: 1px solid #2196f7;
+    border-right: 1px solid #2196f7;
+}
+
+#formSmtp {
+    width: 500px;
+    height: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transform: translate(600px,50px);
+    border-bottom-right-radius: 5px;
+    border: 1px solid #2196f7;
+    padding: 20px;
+    background: whitesmoke;
+}
+
+input {
+    width: auto;
+    height: 40px;
+    display: flex;
+    outline: none;
+    padding-left: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+textarea {
+    width: auto;
+    height: 700px;
+    outline: none;
+    padding-left: 10px;
+    align-items: center;
+    padding-top: 3px;
+    resize: none;
+    overflow-y: auto;
+    border: none;
+}
+
+textarea::-webkit-scrollbar {
+    display: none;
+}
+
+#buttonSender {
+    width: 100px;
+    height: 40px;
+    border: 1px solid #d1cdcd;
+    border-radius: 5px;
+    background: #2196f7;
+    color: #fff;
 }
