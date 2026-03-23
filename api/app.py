@@ -223,10 +223,8 @@ def deletar_item(id_item):
         cursor = conn.cursor()
         cursor.execute("DELETE FROM emails WHERE id = ?", (id_item,))
         deletados_emails = cursor.rowcount
-        cursor.execute("DELETE FROM logs_erro WHERE id = ?", (id_item,))
-        deletados_logs = cursor.rowcount
-
-        if deletados_emails == 0 and deletados_logs == 0:
+        
+        if deletados_emails == 0:
             return {"erro": "Item não encontrado em nenhuma tabela."}, 404
 
         conn.commit()
@@ -241,9 +239,31 @@ def deletar_item(id_item):
         if conn:
             conn.close()
 
+def deletar_falha(id_item):
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM logs_erro WHERE id = ?", (id_item,))
+        deletados_logs = cursor.rowcount
+
+        if deletados_logs == 0:
+            return {"erro": "Item não encontrado em nenhuma tabela."}, 404
+
+        conn.commit()
+        return {"mensagem": "Item deletado com sucesso"}, 200
+
+    except Exception as e:
+        if conn: 
+            conn.rollback()
+        print(f"ERRO CRÍTICO NO BANCO: {str(e)}") 
+        return {"erro": f"Erro interno no banco: {str(e)}"}, 500
+    finally:
+        if conn:
+            conn.close()
 
 @app.route('/api/deletar/<int:id>', methods=['DELETE', 'OPTIONS'])
-def delete_item(id):
+def delete(id):
 
     print(f"REQUISIÇÃO ROTA: 'DELETE' : {datetime.now()}")
 
@@ -261,7 +281,7 @@ def delete_falha(id):
     if request.method == 'OPTIONS':
         return '', 200
     
-    resultado, status_code = deletar_item(id)
+    resultado, status_code = deletar_falha(id)
     return jsonify(resultado), status_code
 
 # ==================== ROTAS POST ====================

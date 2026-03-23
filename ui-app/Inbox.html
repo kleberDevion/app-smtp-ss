@@ -15,6 +15,29 @@
 
     </div>
 
+    <div class="mov-body">
+     <nav class="bar">
+        <h4>Criar nova menssagem</h4>
+        <input type="file" accept="image/*" id="input-file" style="display: none;">
+        <button type="button" id="btn-setimg" title="Upload de arquivo">
+          <i class="fas fa-file"></i>
+        </button>
+      </nav>
+      <form id="formSmtp"> 
+
+        <input type="email" id="destinatario" placeholder="Para">
+
+        <input type="text" id="assunto" placeholder="Assunto">
+
+        <textarea id="corpo" contenteditable="true"></textarea>
+
+        <button type="submit" id="buttonSender" form="formSmtp"> 
+          <i class="fas fa-paper-plane"></i>
+        </button>
+
+      </form>
+    </div>
+
     <nav class="menu-email">
       <div class="logo-body">
         <div class="logo">
@@ -58,6 +81,61 @@
   </body>
   <script>
 
+    const btnOpen = document.querySelector('#send-mail');
+    const targetEl = document.querySelector('#formSmtp');
+    const barON = document.querySelector('.bar');
+    const seiLa = document.querySelector('.mov-body');
+
+
+const barraDeArrasto = document.querySelector('.bar');
+const modal = document.querySelector('.mov-body');
+
+let isDragging = false;
+let offset = { x: 0, y: 0 };
+
+barraDeArrasto.addEventListener('mousedown', (e) => {
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'I') return;
+
+    isDragging = true;
+
+    const rect = modal.getBoundingClientRect();
+    offset.x = e.clientX - rect.left;
+    offset.y = e.clientY - rect.top;
+
+    modal.style.transform = 'none';
+    modal.style.left = rect.left + 'px';
+    modal.style.top = rect.top + 'px';
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    modal.style.left = (e.clientX - offset.x) + 'px';
+    modal.style.top = (e.clientY - offset.y) + 'px';
+});
+
+document.addEventListener('mouseup', () => {
+    isDragging = false;
+});
+
+  
+window.addEventListener('keydown', (e) => {
+   
+    if (e.ctrlKey && e.key.toLowerCase() === 'o') {
+        e.preventDefault(); 
+        
+        targetEl.classList.toggle('ativa');
+        barON.classList.toggle('ativa');
+        seiLa.classList.toggle('ativa');
+    
+        if (targetEl.classList.contains('ativa')) {
+            document.querySelector('#destinatario').focus();
+        }
+    }
+
+});
+
+
+
    function redirectEnviardepois() {
     window.location.href = './enviar-depois.html';
   }
@@ -82,7 +160,7 @@
 
   async function buscarDados() {
     try {
-      const response = await fetch(`http://localhost:5500/api/buscar/inbox?t=${Date.now()}`, {
+      const response = await fetch(`http://localhost:5500/api/buscar/inbox`, {
         method: 'GET',
         headers: { 
           'Content-Type': 'application/json',
@@ -95,7 +173,6 @@
 
       const resultado = await response.json();
       dadosGlobal = Array.isArray(resultado) ? resultado : [resultado];
-
 
       const htmlContent = dadosGlobal.map(dados => `
        <div id="item${dados.id}" class="mail-list-div" onclick="abrirEmail('${dados.id}')">>
@@ -144,6 +221,41 @@ async function deletarItem(id) {
     console.error('Erro na requisição:', err);
   }
 }
+
+const form = document.querySelector('#formSmtp');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const data = {
+    destinatario: document.querySelector('#destinatario').value,
+    assunto: document.querySelector('#assunto').value,
+    corpo: document.querySelector('#corpo').value
+  };
+
+  try {
+    const response = await fetch('http://localhost:2200/api/enviar/email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    
+    if (response.ok) {
+      alert(result.sucesso);
+      form.reset();
+    } else {
+      alert('Erro: ' + result.erro);
+    }
+  } catch (error) {
+    console.log(error);
+    alert('Erro: Erro na requisição');
+  }
+});
+
 
 </script>
 

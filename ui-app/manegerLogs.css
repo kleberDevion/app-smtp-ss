@@ -4,15 +4,14 @@
 * {
     padding: 0;
     margin: 0;
-    box-sizing: 0;
+    box-sizing: border-box;
 }
 
 body {
     background: #e3e9f7;
     height: 100vh;
-    overflow-x: hidden;
+    overflow: hidden;
     font-family: 'Poppins';
-    padding-left: 40px;
     contain: content;
 }
 
@@ -33,6 +32,8 @@ body::-webkit-scrollbar {
     gap: 10px;
     color: #2196f7;
     z-index: 999;
+    overflow-y: hidden;
+    position: fixed;
 }
 
 .logo-maneger {
@@ -101,7 +102,7 @@ body::-webkit-scrollbar {
     background: white;
     position: fixed;
     z-index: 1000;
-    left: -260px;
+    left: -300px;
     bottom: 0;
     transition: all 0.6s ease-in-out;
     overflow-y: auto;
@@ -122,4 +123,10 @@ body::-webkit-scrollbar {
   display: flex;
   flex-direction: column;
   position: absolute;
+  right: 1px;
+  overflow-y: auto;
+}
+
+.logs-ids::-webkit-scrollbar {
+    display: none;
 }

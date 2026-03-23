@@ -53,6 +53,7 @@ def registrar_envio_sucesso(destinatario, assunto, corpo):
                 "INSERT INTO emails_w_emails (destinatario, assunto, corpo, data_hora) VALUES (?, ?, ?, ?)",
                 (destinatario, assunto, corpo, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             )
+            
             conn.commit()
             conn.close()
             print(f"ENVIO REGISTRADO NO BANCO: {destinatario}")
@@ -66,7 +67,7 @@ def enviar_email():
     email_destino = data.get('destinatario')
 
     try:
-        senha = AUTH_KEY.replace(" ", "")
+        senha = AUTH_KEY
 
         msg = MIMEMultipart()
         msg['From'] = EMAIL_SISTEMA

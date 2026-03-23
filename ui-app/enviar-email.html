@@ -12,23 +12,8 @@
   <body>
 
     <div class="body-items">
-      <nav class="bar">
-        <h4>Criar nova menssagem</h4>
-      </nav>
-      <form id="formSmtp">
-
-        <input type="email" id="destinatario" placeholder="Para">
-
-        <input type="text" id="assunto" placeholder="Assunto">
-
-        <textarea type="text" id="corpo" placeholder="Escreva a menssagem aqui"></textarea>
-
-        <button type="submit" id="buttonSender" form="formSmtp"> 
-          <i class="fas fa-paper-plane"></i>
-        </button>
-
-      </form>
-    </div>
+      
+    </div>                                                                                                                                                                                                                                                                                                                                                                    "
 
     <nav class="menu-email">
       <div class="logo-body">
@@ -108,12 +93,12 @@
 
   const conteinerDados = document.querySelector('.body-items');
 
-  //  conteinerDados.innerHTML = `
- //     <div style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; position: absolute; top: 400px; left: 0; flex-direction: column; gap: 10px; font-family: sans-serif;">
- //       <p style="margin: 0; color: #666; font-size: 14px;">Pagina em construção.</p>
-  //      <i class="ri-tools-line" style="font-size: 35px; color: #2196f7;"></i>
- //     </div>
- //   `;
+    conteinerDados.innerHTML = `
+      <div style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; position: absolute; top: 400px; left: 0; flex-direction: column; gap: 10px; font-family: sans-serif;">
+        <p style="margin: 0; color: #666; font-size: 14px;">Pagina em construção.</p>
+        <i class="ri-tools-line" style="font-size: 35px; color: #2196f7;"></i>
+      </div>
+    `;
 
 
 const form = document.querySelector('#formSmtp');
