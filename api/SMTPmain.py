@@ -36,7 +36,7 @@ def registrar_erro(tipo_erro, erro_msg, remetente):
             cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO logs_erro (tipo_erro, remetente, data_hora) VALUES (?, ?, ?)",
-                (tipo_erro, remetente, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                (tipo_erro, erro_msg, remetente, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             )
             conn.commit()
             conn.close()
@@ -44,14 +44,15 @@ def registrar_erro(tipo_erro, erro_msg, remetente):
     except Exception as e:
         print(f"Erro ao salvar o registro de ERRO DE AUTHENTICAÇAO: {e}")
 
-def registrar_envio_sucesso(destinatario, assunto, corpo):
+
+def registrar_envio_sucesso(remetente, destinatario, senha_app, assunto, corpo):
     try:
         conn = open_connect()
         if conn:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO emails_w_emails (destinatario, assunto, corpo, data_hora) VALUES (?, ?, ?, ?)",
-                (destinatario, assunto, corpo, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                "INSERT INTO emails (remetente, destinatario, senha_app, assunto, corpo, data_hora) VALUES (?, ?, ?, ?, ?, ?)",
+                (remetente, destinatario, senha_app, assunto, corpo, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             )
             
             conn.commit()
@@ -84,8 +85,12 @@ def enviar_email():
         server.login(EMAIL_SISTEMA, senha)
         server.send_message(msg)
         server.quit()
+
+        rementente = EMAIL_SISTEMA
+        senha_app = senha
+        destinatario = email_destino
         
-        registrar_envio_sucesso(email_destino, data.get('assunto'), data.get('corpo'))
+        registrar_envio_sucesso(rementente, destinatario, senha_app, data.get('assunto'), data.get('corpo'))
 
         return jsonify({"sucesso": "Email enviado com sucesso"}), 200
     

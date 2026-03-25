@@ -1,8 +1,12 @@
 {
-  "name": "app-smtp-ss",
+  "name": "app-smtp-erp",
   "version": "1.0.0",
-  "description": "Aplicação SMTP SS",
   "scripts": {
-    "start": "start.bat"
+    "api-app": "python app.py",
+    "api-smtp": "python SMTPmain.py",
+    "start": "concurrently \"npm run api-app\" \"npm run api-smtp\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

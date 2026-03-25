@@ -1,31 +1,13 @@
 import sqlite3
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
-ROUTE_DB = os.getenv("DB_PATH")
+# 1. Conecta ao banco de dados
+conexao = sqlite3.connect('SSbanco.db')
+cursor = conexao.cursor()
 
-def criar_tabelas():
-    try:
-        conn = sqlite3.connect(ROUTE_DB)
-        cursor = conn.cursor()
-        
-        # SQL para criar a tabela de envios realizados
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS emails_w_emails (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                destinatario TEXT NOT NULL,
-                assunto TEXT,
-                corpo TEXT,
-                data_hora TEXT NOT NULL
-            )
-        ''')
-        
-        conn.commit()
-        conn.close()
-        print("✅ Tabela 'envios_sucesso' criada ou já existente!")
-    except Exception as e:
-        print(f"❌ Erro ao criar tabela: {e}")
+# 2. Comando para adicionar a coluna 'email' do tipo 'TEXT'
+# Sintaxe: ALTER TABLE nome_da_tabela ADD COLUMN nome_da_coluna tipo_de_dado
+cursor.execute("ALTER TABLE emails ADD COLUMN corpo TEXT")
 
-if __name__ == "__main__":
-    criar_tabelas()
+# 3. Salva as alterações e fecha
+conexao.commit()
+conexao.close()

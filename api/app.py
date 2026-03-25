@@ -67,43 +67,28 @@ def buscar_envios():
     
 @app.route('/api/buscar/inbox', methods=['GET'])
 def buscar_inbox():
-    if request.method == 'OPTIONS':
-        return '', 200
-
-    token = request.headers.get('Authorization')
-    dados = verifica_token(token)
-    if not dados:
-        return jsonify({"erro": "Token inválido"}), 401
-
+    dados = request.get_json()
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT id, nome, remetente, destinatario, data_envio FROM emails WHERE remetente = ?', (dados['email'],))
+        query = """
+            SELECT id, remetente, destinatario, assunto, corpo, data_hora 
+            FROM emails 
+            WHERE remetente = ? OR destinatario = ?
+            ORDER BY data_hora DESC
+        """
+        cursor.execute(query, (dados['email'], dados['email']))
+        
         rows = cursor.fetchall()
         resultados = [dict(row) for row in rows]
         conn.close()
+        
         return jsonify(resultados), 200
 
     except Exception as e:
+        print(f"ERRO NA BUSCA INBOX: {e}") 
         return jsonify({"erro": str(e)}), 500
 
-@app.route('/api/contar/envios', methods=['GET'])
-def contar_envios():
-    if request.method == 'OPTIONS':
-        return '', 200
-
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute('SELECT COUNT(*) as total FROM emails')
-        resultado = cursor.fetchone()
-        total = resultado['total']
-        conn.close()
-
-        return jsonify({"total": total}), 200
-
-    except Exception as e:
-        return jsonify({"erro": str(e)}), 500
     
 @app.route('/api/contar/falhas', methods=['GET'])
 def contar_falhas():
@@ -405,7 +390,7 @@ def criar_user():
         email_usuario = data.get('email')
 
         cursor.execute('SELECT id FROM usuarios WHERE nome = ?', (nome,))
-        existe = cursor.fetchone() # possivel erro de dizer que existe sem existir. olha aqui seu burro Kleber.
+        existe = cursor.fetchone()
 
         if existe:
            return jsonify({"erro": "Usuário já existe"}), 409
@@ -435,10 +420,9 @@ def criar_user():
 
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()
-            server.login(os.getenv("EMAIL_SISTEMA"), os.getenv("SENHA_APP_SISTEMA"))
+            server.login(os.getenv("EMAIL_SISTEMA"), os.getenv("SENHA_ENVIO"))
             server.send_message(msg)
             server.quit()
-
               
         except Exception as e_mail:
             print(f"Usuário criado, mas o email deu erro: {e_mail}")
@@ -482,7 +466,7 @@ def login():
           "mensagem": "Login realizado!",
           "usuario_id": usuario[0],
           "nome": usuario[1],
-          "email": usuario[3], #precisa aqui ??
+          "email": usuario[3],
           "token": token
        }), 200
     

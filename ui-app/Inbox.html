@@ -175,10 +175,10 @@ window.addEventListener('keydown', (e) => {
       dadosGlobal = Array.isArray(resultado) ? resultado : [resultado];
 
       const htmlContent = dadosGlobal.map(dados => `
-       <div id="item${dados.id}" class="mail-list-div" onclick="abrirEmail('${dados.id}')">>
+       <div id="item${dados.id}" class="mail-list-div">
          <i class="fas fa-inbox" style="font-size: 13px; color: #2196f7;"></i>
-         <p style="padding-right: 10px; border-left: 2px solid #2196f7; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; border-right: 1px solid #2196f7; border-radius: 5px; height: 100%; display: flex; align-items: center; padding-left: 10px;">De: [${dados.nome || 'Nao informado'} |  ${dados.remetente || 'Nao informado'}] | Para: [${dados.destinatario || 'Nao informado'}]ㅤㅤㅤㅤㅤㅤ | Horario: ${dados.data_envio}</p>
-          <button type="button" data-id="${dados.id}" class="btn-delete" onclick="deletarItem('${dados.id}')" style="border: 1px solid #ccc; border-radius: 2px; padding: 3px; color: #afafaf; position: absolute; right: 10px;">
+         <p  onclick="abrirEmail('${dados.id}')" style="padding-right: 10px; border-left: 2px solid #2196f7; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; border-right: 1px solid #2196f7; border-radius: 5px; height: 100%; display: flex; align-items: center; padding-left: 10px;">De: [${dados.nome || 'Nao informado'} |  ${dados.remetente || 'Nao informado'}] | Para: [${dados.destinatario || 'Nao informado'}]ㅤㅤㅤㅤㅤㅤ | Horario: ${dados.data_envio}</p>
+          <button type="button" data-id="${dados.id}" class="btn-delete" onclick="deletarItem('${dados.id}')" style="cursor: pointer; border: 1px solid #ccc; border-radius: 2px; padding: 3px; color: #afafaf; position: absolute; right: 10px; z-index: 1000;">
              <i class="fas fa-trash"></i>
           </button>
        </div>
@@ -255,6 +255,13 @@ form.addEventListener('submit', async (e) => {
     alert('Erro: Erro na requisição');
   }
 });
+
+const token = localStorage.getItem('token_acesso');
+
+if (!token) {
+    alert("Acesso negado! Faça login primeiro.");
+    window.location.href = "./login.html";
+}
 
 
 </script>
