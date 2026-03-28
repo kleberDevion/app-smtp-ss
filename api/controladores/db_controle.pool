@@ -1,0 +1,19 @@
+# INICIO DO CONTROLADOR DO DO DB.
+import Sqlite3 
+import dotenv
+import os
+
+from dotenv import load_dotenv 
+
+load_dotenv()
+
+ROUTE_DB = os.getenv('DB_ROUTE')
+DB_NAME = os.getenv('DB_NAME')
+
+function dbConnection() {
+    try {
+        conn = Sqlite.connect(DB_NAME)
+        conn.sqliteReadRows.Factory()
+        return;
+    }
+}

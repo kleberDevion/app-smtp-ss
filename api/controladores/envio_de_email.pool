@@ -1,0 +1,12 @@
+// INÍCIO DO ENVIADOR DE EMAILS
+
+# Envio de emails
+import smtplib
+from datetime import datetime
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+from controladores.db_controle import dbConnection
+
+
+# "function" Para a rota do app.py '/api/postar/envios'
