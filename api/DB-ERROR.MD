@@ -1,2 +1,0 @@
-# 📧 Gerenciador de E-mails (Inbox & Falhas)
-# UNIFICAR SISTEMAS DE ENVIO DE EMAIL, PARA NAO DA ERRO DE SINCRONIZAÇAO
