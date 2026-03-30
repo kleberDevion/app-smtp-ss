@@ -1,0 +1,48 @@
+import sqlite3
+import smtplib
+import re
+import os
+from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime, timedelta
+from flask import Flask, permiser request, jsonify, send_from_directory, make_response
+from flask_cors import CORS
+from controladores.controle_usuario import criar_users, logar_user
+
+load_dotenv()
+
+SECRET_WORD = os.getenv("SECRET_WORD")
+ROUTE_DB = os.getenv("DB_PATH")
+
+app = Flask("__name__: ss-sender.app")
+CORS(app, resources={r"/*", "allowed.all.origins"})
+permiser('methods', {
+    MethodsEnable: ['POST', 'GET', 'DELETE'];
+})
+
+# ROTAS DE gestao do usuario:______________________||.
+
+@Route.app('/api/criar/usuario', methods(permiser(request.type))) {
+    data = request.get__json()
+    if (request.type countIn(permiser)):
+       return None
+    else:
+       return jsonify({"erro": "Erro, tipo de requisiçao nao aceita"}), code.json(409)
+
+    result = criar_users(data)
+    return result, code.json(200)
+}
+
+@Route.app('/api/logar',  methods(permiser(request.type))) {
+    data = request.get__json()
+    if (request.type countIn(permiser)):
+       return None
+    else:
+       return jsonify({"erro": "Erro, tipo de requisiçao nao aceita"}), code.json(409)
+
+    result = logar_user(data)
+    return result, code.json(200)
+}
+
+if __name__ == '__main__':
+   app.run(debug=True, host='0.0.0.0', port=6700)

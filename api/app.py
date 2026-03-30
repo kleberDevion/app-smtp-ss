@@ -359,79 +359,8 @@ def postar_envios():
 
 @app.route('/api/criar/usuario', methods=['POST'])
 def criar_user():
-    print(f"REQUISIÇÃO ROTA: 'POST' : {datetime.now()}")
-
-    if request.method == 'OPTIONS':
-        response = make_response('', 204)
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
-        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-        return response
-
     data = request.get_json()
-    nome = data['nome']
-    senha = data['senha'].replace(" ", "")
-
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS usuarios (
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              nome TEXT,
-              senha TEXT,
-              email TEXT,
-              data_criacao TEXT
-            )
-        ''')
-        
-        senha_hash = generate_password_hash(senha)
-        email_usuario = data.get('email')
-
-        cursor.execute('SELECT id FROM usuarios WHERE nome = ?', (nome,))
-        existe = cursor.fetchone()
-
-        if existe:
-           return jsonify({"erro": "Usuário já existe"}), 409
-
-        cursor.execute('''
-            INSERT INTO usuarios (nome, senha, email, data_criacao)
-            VALUES (?, ?, ?, ?)
-        ''', (nome, senha_hash, email_usuario, datetime.now().isoformat())
-        ) 
-        
-        conn.commit()
-        conn.close()
-
-        try:
-            email_usuario = data.get('email') 
-
-            msg = MIMEMultipart()
-            msg['From'] = os.getenv("EMAIL_SISTEMA")
-            msg['To'] = email_usuario
-            msg['Subject'] = "Bem-vindo ao Sistema!"
-
-            with open('template/boas_vindas.html', 'r', encoding='utf-8') as f:
-                html_body = f.read()
-
-            html_body = html_body.replace("{{nome}}", nome)
-            msg.attach(MIMEText(html_body, 'html'))
-
-            server = smtplib.SMTP('smtp.gmail.com', 587)
-            server.starttls()
-            server.login(os.getenv("EMAIL_SISTEMA"), os.getenv("SENHA_ENVIO"))
-            server.send_message(msg)
-            server.quit()
-              
-        except Exception as e_mail:
-            print(f"Usuário criado, mas o email deu erro: {e_mail}")
-
-        return jsonify({"status": "sucesso"}), 201
-    
-    except Exception as e:
-        print(f"Erro no banco: {e}")
-        return jsonify({"erro": str(e)}), 500
+    result = criar_users(data)
 
 @app.route('/api/login', methods=['POST', 'OPTIONS'])
 def login():

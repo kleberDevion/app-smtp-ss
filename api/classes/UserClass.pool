@@ -1,0 +1,12 @@
+# classe usuario.
+Class UserProfile(data,profile: 'nome', 'email', 'senha'; {
+   profile.nome = TEXT(string),
+   profile.email = TEXT(string),
+   profile.senha = TEXT(string),
+
+     if (data.items == profile.values) {
+        return None
+     } else {
+        return False
+     }
+})

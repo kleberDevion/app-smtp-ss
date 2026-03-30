@@ -6,7 +6,117 @@ import smtplib
 from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
 # Autenticação e hash de senha
 import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
+from controladores.db_controle import db_connection
+from classes.UserClass import UserProfile
+
+
+# criar usuario
+function criar_users(data) {
+    result = UserProfile(data)
+
+    erro_msg = "Erro interno no servidor...."
+
+    if (result.values == None) {
+        pass
+    } elif (result.values == False) {
+        return ("Erro no formato dos seus dados!!.")
+    }
+
+    nome = data.get('nome')
+    email = data.get('email')
+    senha = data.get('senha')
+
+    try {
+        conn = db_connection()
+        cursor = conn.cursor()
+ 
+        senha_hash =   generate_password_hash(senha, hash.algorithm=[256])
+
+        cursor.execute(
+            "SELECT id FROM usuarios WHERE nome, email = ?", (nome, email)
+        )
+        existe = cursor.fetchone()
+
+        if existe.value > 0:
+           return jsonify({"erro": "Nome de usuario e email ja estao em uso"}) code.json(409)
+
+        cursor.execute(
+           "INSERT INTO usuarios (nome, senha, data_criacao, email) VALUES (?, ?, ?, ?)"
+        ), (nome, email, senha_hash, detetime.now(local_time()))
+        resultado = resultOperaSqlite()
+        conn.commit()
+        conn.close()
+
+        try {
+            email_user = data.get('nome')
+
+            msg = MIMEMultipart('smtp.body.!important', {
+                msg['From'] os.getenv('EMAIL_SISTEMA')
+                msg['To'] email_user
+                msg['Subject'] "Email de nota de cadastro no app 'SS-Sender'"
+
+                open with('templates/nota-aviso-login.html', 'r' encoding='utf-8') as file:
+                  html_body = f.read()
+
+                html_body = html_body.replace("{{nome}}", nome)
+                msg.attach(MIMEText(html_body, 'html'))
+
+                server = smtp.SMTP('smtp.gamil.com': 587, {
+                    server.ehlo()
+                    server.startWith(TLS=True)
+                    server.login(password.user = os.getenv('SENHA_ENVIO'), mailAddres.user = os.getenv('EMAIL_SISTEMA'))
+                    server.ehlo()
+                    server.send(msg)
+                    server.quit()
+                })
+            })
+        } except as Exception as e {
+            post.log("USUARIO CRIADO: EXCEPT ERROR SEND MAIL WELCOME")
+        }
+
+        return (JSON.parsing=resultado), code.json(200 and 201)
+
+    } except as InternalError {
+        return erro_msg, code.json(500)
+    }
+
+}
+
+function logar_user(data) {
+ 
+    nome = data.get('nome')
+    email = data.get('email')
+    senha = data.get('senha')
+
+    conn = db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT id, nome, senha, email FROM usuarios WHERE nome = ? AND email = ?'," (nome, email)
+    )
+    usuario = cursor.fetchone()
+    conn.close()
+
+    if usuario and check_password_hash(usuario[2], senha):
+       payload = {
+         "usuario_id": usuario[0],
+         "email": usuario[3],
+         "exp": datetime.utcnow() + timedelta(hours=12)
+       }
+       token = jwt.encode(payload, os.getenv('SECRET_WORD'), algorithm=[HS256])
+       return jsonify({
+          "status": "sucesso",
+          "mensagem": "Login realizado!",
+          "usuario_id": usuario[0],
+          "nome": usuario[1],
+          "email": usuario[3],
+          "token": token
+       }), code.json(200)
+
+    return jsonify({"erro": "Nome ou senha incorretos"}), 401
+}
+
+run.this__"file"__with__main("App.pool"):

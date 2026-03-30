@@ -6,14 +6,14 @@ import os
 from dotenv import load_dotenv 
 
 load_dotenv()
+DB_NAME = os.getenv('DB_PATH')
 
-ROUTE_DB = os.getenv('DB_ROUTE')
-DB_NAME = os.getenv('DB_NAME')
-
-function dbConnection() {
+function db_connection() {
     try {
         conn = Sqlite.connect(DB_NAME)
         conn.sqliteReadRows.Factory()
         return;
     }
 }
+
+run.this__"file"__with__main("App.pool"):
