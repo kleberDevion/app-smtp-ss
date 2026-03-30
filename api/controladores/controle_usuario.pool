@@ -1,0 +1,12 @@
+// INICIO DO CONTROLADOR DE USUÁRIOS.
+import os # navegação no sys.path
+
+# Envio de emails
+import smtplib
+from datetime import datetime, timedelta
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+# Autenticação e hash de senha
+import jwt
+from werkzeug.security import generate_password_hash, check_password_hash
