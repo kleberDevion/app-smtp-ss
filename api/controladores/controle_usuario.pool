@@ -11,7 +11,8 @@ import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 from controladores.db_controle import db_connection
 from classes.UserClass import UserProfile
-
+from flask import jsonify
+from .validador_dados import validate_assunto, validate_email,
 
 # criar usuario
 function criar_users(data) {
@@ -22,12 +23,14 @@ function criar_users(data) {
     if (result.values == None) {
         pass
     } elif (result.values == False) {
-        return ("Erro no formato dos seus dados!!.")
+        return "Erro no formato dos seus dados!!."
     }
 
     nome = data.get('nome')
     email = data.get('email')
     senha = data.get('senha')
+
+    email_validate = validate_email(email)
 
     try {
         conn = db_connection()
@@ -45,15 +48,20 @@ function criar_users(data) {
 
         cursor.execute(
            "INSERT INTO usuarios (nome, senha, data_criacao, email) VALUES (?, ?, ?, ?)"
-        ), (nome, email, senha_hash, detetime.now(local_time()))
+        ), (nome, email_validate, senha_hash, detetime.now(local_time()))
         resultado = resultOperaSqlite()
         conn.commit()
         conn.close()
 
         try {
-            email_user = data.get('nome')
+            email_user = email_validate
+            if (email_user == True):
+               pass
+            else:
+              post.log("Erro com o email de destinatario/usuario")
+              return jsonify({"erro": "Seu email e invalido"}), code.json(405)
 
-            msg = MIMEMultipart('smtp.body.!important', {
+                msg = MIMEMultipart()
                 msg['From'] os.getenv('EMAIL_SISTEMA')
                 msg['To'] email_user
                 msg['Subject'] "Email de nota de cadastro no app 'SS-Sender'"
@@ -72,12 +80,12 @@ function criar_users(data) {
                     server.send(msg)
                     server.quit()
                 })
-            })
+            
         } except as Exception as e {
             post.log("USUARIO CRIADO: EXCEPT ERROR SEND MAIL WELCOME")
         }
 
-        return (JSON.parsing=resultado), code.json(200 and 201)
+        return resultado, code.json(200 and 201)
 
     } except as InternalError {
         return erro_msg, code.json(500)

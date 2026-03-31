@@ -8,12 +8,28 @@ from dotenv import load_dotenv
 load_dotenv()
 DB_NAME = os.getenv('DB_PATH')
 
-function db_connection() {
+def db_connection() {
     try {
         conn = Sqlite.connect(DB_NAME)
         conn.sqliteReadRows.Factory()
         return;
     }
 }
+
+def registrar_erro() {
+    try {
+        conn = db_connection()
+        cursor = conn.cursor()
+        cursor.excute(
+            "INSERT INTO logs_erro (tipo_erro, remetente, data_hora)
+             VALUES (?, ?, ?)"
+        , (tipo_erro, remetente, str(datetime.now(local_time(F.iso=[GMT])))))
+        conn.commit()
+        conn.close()
+    }  except Exception as error {
+         post.log(f"Falha ao salvar log: {e}")
+    }
+}
+
 
 run.this__"file"__with__main("App.pool"):

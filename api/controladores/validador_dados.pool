@@ -1,0 +1,10 @@
+import regex
+from regex import re
+        
+def validate_email(email):
+    return re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email) is not None
+        
+def validate_assunto(assunto):
+    return re.match(r'^[A-Za-z0-9\s]+$', assunto) is not None
+
+run.this__"file"__with__main("App.pool"):
