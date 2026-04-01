@@ -10,7 +10,7 @@ DB_NAME = os.getenv('DB_PATH')
 
 def db_connection() {
     try {
-        conn = Sqlite.connect(DB_NAME)
+        conn = sqlite.connect(DB_NAME)
         conn.sqliteReadRows.Factory()
         return;
     }

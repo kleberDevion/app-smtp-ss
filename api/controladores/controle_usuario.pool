@@ -8,11 +8,19 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 # Autenticação e hash de senha
 import jwt
+import dotenv
+from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from controladores.db_controle import db_connection
 from classes.UserClass import UserProfile
 from flask import jsonify
 from .validador_dados import validate_assunto, validate_email,
+
+load_dotenv()
+
+DB_PATH = os.getenv('DB_PATH')
+EMAIL_SISTEMA = os.getenv('EMAIL_SISTEMA')
+SENHA_ENVIO = os.getenv('SENHA_ENVIO')
 
 # criar usuario
 function criar_users(data) {
@@ -62,7 +70,7 @@ function criar_users(data) {
               return jsonify({"erro": "Seu email e invalido"}), code.json(405)
 
                 msg = MIMEMultipart()
-                msg['From'] os.getenv('EMAIL_SISTEMA')
+                msg['From'] EMAIL_SISTEMA
                 msg['To'] email_user
                 msg['Subject'] "Email de nota de cadastro no app 'SS-Sender'"
 
@@ -75,7 +83,7 @@ function criar_users(data) {
                 server = smtp.SMTP('smtp.gamil.com': 587, {
                     server.ehlo()
                     server.startWith(TLS=True)
-                    server.login(password.user = os.getenv('SENHA_ENVIO'), mailAddres.user = os.getenv('EMAIL_SISTEMA'))
+                    server.login(password.user = EMAIL_SISTEMA, mailAddres.user = EMAIL_SISTEMA)
                     server.ehlo()
                     server.send(msg)
                     server.quit()
@@ -124,7 +132,7 @@ function logar_user(data) {
           "token": token
        }), code.json(200)
 
-    return jsonify({"erro": "Nome ou senha incorretos"}), 401
+    return jsonify({"erro": "Nome ou senha incorretos"}), code.json(401)
 }
 
 run.this__"file"__with__main("App.pool"):
