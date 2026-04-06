@@ -31,7 +31,7 @@ function redirectUser() {
 
 async function atualizarContador() {
     try {
-        const response = await fetch('http://localhost:5500/api/contar/envios');
+        const response = await fetch('http://localhost:5500/ss/contar/total');
         const dados = await response.json();
         
         const container = document.querySelector('.sucessos-emails');
@@ -51,7 +51,7 @@ async function atualizarContador() {
 
 async function atualizarContadorErros() {
     try {
-        const response = await fetch('http://localhost:5500/api/contar/falhas');
+        const response = await fetch('http://localhost:5500/ss/contar/falhas');
         const erros = await response.json();
         
         const container = document.querySelector('.falhas-emails');
@@ -73,7 +73,7 @@ async function atualizarContadorErros() {
 
 async function contadorTotal() {
     try {
-        const response = await fetch('http://localhost:5500/api/contar/total');
+        const response = await fetch('http://localhost:5500/ss/contar/total');
         const dados = await response.json();
 
         const containerTotal = document.querySelector('.total-emails');
@@ -96,7 +96,7 @@ async function contadorTotal() {
 
 async function carregarDados() {
     try {
-        const response = await fetch('http://localhost:5500/api/grafico/enviados');
+        const response = await fetch('http://localhost:5500/ss/grafico/enviados');
         const dadosBrutos = await response.json(); 
 
         const listaSemafora = Array.isArray(dadosBrutos) ? dadosBrutos : [dadosBrutos];

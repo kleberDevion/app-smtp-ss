@@ -27,14 +27,16 @@ def inbox_mail_dados():
     try:
         conn = db_connection()
         cursor = conn.cursor()
-        # Corrigido o SQL para sintaxe válida
+        conn.row_factory = sqlite3.Row 
         cursor.execute(
-            "SELECT id, remetente, destinatario, assunto, corpo, data_hora FROM emails"
+            "SELECT id, remetente, destinatario, assunto, corpo, data_envio FROM emails"
         )
         rows = cursor.fetchall()
         resultados = [dict(row) for row in rows]
         conn.close()
+
         return jsonify(resultados), 200
+    
     except Exception as e:
         print(f"ERRO AO ENVIAR DADOS PARA INBOX: {e}")
         return jsonify({"erro": str(e)}), 500

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="./logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chat.ss | ss.com</title>
+</head>
+<body>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: rgb(71, 71, 71);
+        overflow-x: hidden;
+        font-family: 'Poppins';
+        width: 100vw;
+        height: 100vh;
+    }
+
+    body::-webkit-scrollbar {
+        display: none;
+    }
+
+    #topo {
+        width: 86%;
+        height: 50px;
+        background: #111425;
+        display: flex;
+        position: absolute;
+        right: 0;
+    }
+
+    #grupos {
+        width: 14%;
+        height: 100%;
+        border: 2px solid #232323;
+        display: flex;
+        flex-direction: column;
+        background: #232323;
+    }
+
+    #top {
+        width: 100%;
+        height: 49px;
+        background: #111425;
+    }
+
+    #footer-editor {
+        width: 86%;
+        height: 60px;
+        background: #232323;
+        display: flex;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        flex-direction: row;
+        gap: 10px;
+        border-left: 1px solid #413f3f;
+    }
+
+    #formMsg {
+        width: auto;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    #editor-msg {
+       width: 1500px;
+       height: 40px;
+       border-radius: 20px;
+       padding-left: 20px;
+       position: absolute;
+       left: 210px;
+       outline: none;
+    }
+
+    #chat-camp {
+        width: 86%;
+        height: 89%;
+        display: flex;
+        position: absolute;
+        right: 0;
+        bottom: 60px;
+        border: none;
+        padding-left: 20px;
+        padding-top: 20px;
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    #send-msg {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #232323;
+        display: flex;
+        position: absolute;
+        right: 30px;
+        align-items: center;
+        justify-content: center;
+        padding-right: 3px;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    #box {
+        width: 50px;
+        height: 30px;
+        display: flex;
+        position: absolute;
+        border-top-left-radius: 7px;
+        border-bottom-right-radius: 7px;
+        border-bottom: 1px solid aqua;
+        left: 96.7%;
+        bottom: 10px;
+        z-index: -1;
+        transition: bottom 0.4s ease;
+        pointer-events: none;
+        transition: all 0.4s ease;
+        font-size: 12px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .box-ativa {
+       transform: translateY(-70px);
+       color: #fff;
+       background: #111425;
+    }
+</style>
+
+     <header id="topo">
+
+     </header>
+     <div id="chat-capm">
+
+        <div id="chat-camp">
+        
+        </div>
+
+        <div id="footer-editor">
+            <form id="formMsg">
+                <input type="text" id="editor-msg" placeholder="Mandar menssagem..." autocomplete="off">
+                <button type="button" id="send-msg" form="formMsg">
+                    <i class="fas fa-paper-plane" style="transform: rotateZ(46deg);"></i>
+                </button>
+            </form>
+        </div>
+     </div>
+     <nav id="grupos">
+        <div id="top"></div>
+ 
+     </nav>
+
+<!--fezes-->
+<div id="box">
+  <div class="title">
+    <p>Enviar</p>
+  </div>
+</div>
+<!--fezes-->
+<script>
+
+const btn = document.querySelector('#send-msg'); 
+const box = document.querySelector('#box');
+
+btn.addEventListener('mouseenter', () => {
+    box.classList.add('box-ativa');
+});
+
+btn.addEventListener('mouseleave', () => {
+    box.classList.remove('box-ativa');
+});
+
+
+const chat = document.getElementById('chat-camp');
+const aviso = `
+   <div id="aviso" style="color: lime; display: flex; width: auto; height: auto; position: absolute; left: 42%; top: 50%; flex-direction: column; align-items: center; gap: 30px;">
+      <i class="ri-chat-check-line" style="font-size: 60px; color: #fff;"></i>
+      <p>Selecione uma conversa</p>
+   </div>
+`;
+
+if (!chat.innerHTML || chat.innerHTML.trim() === "") {
+    chat.innerHTML = aviso;
+}
+
+const conteinerDados = document.querySelector('#chat-camp');
+
+let dadosGlobal = [];
+
+async function buscarMensagens() {
+    try {
+        const response = await fetch('http://localhost:5507/tunnek/msg', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('token_acesso')
+            },
+        });
+
+        if (response.status === 404) {
+            console.warn('Dados não encontrados.');
+            return;
+        }
+        if (response.status === 500) {
+            console.error('Erro no servidor 500.');
+            return;
+        }
+
+        const resultado = await response.json();
+       
+        dadosGlobal = Array.isArray(resultado) ? resultado : [resultado];
+
+        const htmlContent = dadosGlobal.map(dados => `
+            <div id="item${dados.id}" style="width: auto; height: auto; display: flex; position: relative; align-items: flex-start; flex-direction: column; gap: 7px; margin-bottom: 15px;">
+                <div style="wmax-width: 300px; height: auto; display: flex;  background: #DCF8C6; align-items: center; padding: 5px 7px; font-size: 12px; border-radius: 5px; transform: translateX(auto);">
+                    <i class="fas fa-user"></i>
+                    <p style="margin: 0 0 0 5px;">${dados.user_name || "user"}</p>
+                </div>
+                <div style="display: flex; position: relative; background: #DCF8C6; font-size: 14px; font-family: system-ui, -apple-system, sans-serif; flex-direction: column; gap: 10px; padding: 10px; overflow-wrap: anywhere; word-break: break-all; width: 100%; max-width: 400px; border-radius: 10px;">
+                    <p style="margin: 0;">${dados.msg || ""}</p>
+                    <div style="width: fit-content; min-width: 60px; padding: 2px 8px; display: flex; justify-content: center; align-items: center; background: green; color: #fff; gap: 5px; font-size: 8px; border-radius: 10px; align-self: flex-end;">
+                        <p style="margin: 0;">${dados.status || ''}</p>
+                        <i class="fa-solid fa-check"></i>  
+                    </div>  
+                </div>
+            </div>
+        `).join('');
+
+        conteinerDados.innerHTML = htmlContent;
+
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        conteinerDados.innerHTML = '<p style="text-align: center; color: gray;">Erro desconhecido, olhe o console.</p>';
+    }
+}
+
+window.addEventListener('DOMContentLoaded', buscarMensagens);
+
+const formMsg = document.getElementById('formMsg');
+
+formMsg.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+        user_name: localStorage.getItem('userName'),
+        email_user: localStorage.getItem('userEmail'),
+        msg: document.querySelector('#editor-msg').value
+    };
+
+    try {
+        const response = await fetch('http://localhost:5507/chat-ss', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            formMsg.reset();
+        } else {
+            alert(result.erro || 'Erro desconhecido');
+        }
+    } catch (error) {
+        alert("Erro: " + result.erro + "\nDetalhes: " + result.detalhes);
+        console.error("Detalhes do erro no servidor:", result.detalhes);
+    }
+});
+
+</script>
+</body>
+</html>

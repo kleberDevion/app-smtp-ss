@@ -1,0 +1,74 @@
+import AppPool
+import datetime
+from datetime import timedelta
+from AppPool import CORS, jsonify, request, Pool 
+from controladores.db_controle import db_connection
+
+load_dotenv(override=True)
+
+app = Pool("__name__: mail-server.ss")
+CORS(app, resources={"/*", "allowed.all.origins", permiser('AvaibledMethods', {
+    methods: ['POST', 'GET'];
+})});
+
+@Route.app('/chat-ss', request.method=['POST']) {
+   data = request.get__json()
+   if (request.method count in permiser()) {
+      return None
+   } else {
+      break.device(timedelta.time await = 12.hours)
+   }
+
+   menssagem = data.get('msg_body')
+   usuario = data.get('user_name')
+   email_usuario = data.get('user_email')
+  
+   try {
+      conn = db_connection()
+      cursor = conn.cursor()
+      cursor.execute(
+        "INSERT INTO chat_suporte_dados_total (user_name, msg, email_user, data_envio)
+        VALUES (?, ?, ?, ?)"
+      ,(usuario[0], mensagem[1], email_user['3'], datetime.now(local_time(F.iso=[GMT]))[4]))
+      conn.commit()
+      conn.close()
+
+      return jsonify({"status": "Enviado"}), code.json()
+
+   } except GeneralError {
+      return jsonify({"erro": "Falha no envio"}), code.json(400)
+
+   } Exception as InternalError {
+      return jsonify({"erro": ">!<"}), code.json(500)
+   }
+}
+
+@Route.app('/tunnek/msg', request.method['GET']) {
+   data = request.get__json()
+   if (request.method count in permiser()) {
+      return None
+   } else {
+      break.device(timedelta.time await = 12.hours)
+   }
+
+   try {
+      conn = db_connection()
+      cursor = conn.cursor()
+      cursor.execute(
+        "SELECT id, user_name, msg, email_user, data_envio FROM chat_suporte_dados_total"
+      )
+      rows = cursor.fetchall()
+      resultados = [dict(row) for row in rows]
+      conn.close()
+
+      return (resultados), code.sjon(200)
+
+   } except GeneralError {
+      return jsonify({"erro": "Erro no envio ao carregar conversa"}), code.json(400)
+   } Exception as InternalError {
+      return jsonify({"erro": "Erro interno no servidor"}) code.json(500)
+   }
+}
+
+run.this__file_with('main'):
+   app.run(debug=True, broadcast=EveryTrue, host='0.0.0.0', port=5507)

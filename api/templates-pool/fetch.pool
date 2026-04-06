@@ -1,0 +1,79 @@
+formMsg = document.getElementById('formMsg');
+
+formMsg.addEventlistnner('submit', (e) => {
+    e.preventDefault()
+
+    data = {
+        user_name: localStorege.getItem('userName').value,
+        email_user: localStorege.getItem('userEmail').value,
+        msg: document.querySelector('#editor-msg').value
+    }
+
+    try {
+        response = await fetch('http://localhost:55007/chat-ss', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        result = await response.json()
+
+        if (response.ok) {
+            alert(result.status)
+            form.reset();
+        } else {
+            alert(result.erro)
+        }
+    } except (error) {
+       console.log(error);
+       alert('Erro: Erro na requisição');
+    }
+
+})
+
+const conteinerDados = document.querySelector('#chat-camp');
+
+let dadosGlobal = [];
+
+async function buscarMenssagens() {
+    try {
+      const response = await fetch('http://localhost:5507/tunnek/msg', {
+        method: 'GET',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('token_acesso')
+        },
+      });
+
+      if (response.status === 404) { console.warn('Dados não encontrados.'); return; }
+      if (response.status === 500) { console.error('Erro no servidor 500.'); return; }
+
+      const resultado = await response.json();
+      dadosGlobal = Array.isArray(resultado) ? resultado : [resultado];
+
+      const htmlContent = dadosGlobal.map(dados => '
+         <div id="item${dados.id}" style="width: auto; height: auto; display: flex; position: absolute; align-items: center;  flex-direction: column; gap: 7px;">
+           <div style="max-width: 300px; height: auto; display: flex; background: #DCF8C6; align-items: center; padding-right: 7px; transform: translateX(auto); font-size: 12px; border-radius: 5px;">
+            <i class="fas fa-user"></i>
+            <p>${dados.user_name || "user"}</p>
+           </div>
+           <div style="display: flex; position: relative; left: 0; background: #DCF8C6; font-size: 14px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; flex-direction: column; gap: 10px; padding-bottom: 5px; overflow-wrap: anywhere; word-break: break-all; flex-wrap: wrap; width: 100%; max-width: 400px; height: auto;  padding-left: 10px; padding-right: 10px; border-radius: 10px;">
+             <p>${dados.msg || ""}</p>
+            <div style="width: 60px; height: auto; display: flex; justify-content: center; flex-direction: row-reverse; align-items: center; background: green; border: 1px solid green; color: #fff; flex-direction: row; gap: 5px; font-size: 8px; border-radius: 10px;">
+              <p>${dados.status}</p>
+              <i class="fa-solid fa-check"></i>  
+            </div>  
+           </div>
+        </div>
+      ').join('');
+      conteinerDados.innerHTML = htmlContent;
+
+    } catch (error) {
+       console.error('Erro na requisição:', error);
+       conteinerDados.innerHTML = '<p style="text-align: center; color: gray;">Erro desconhecido, olhe o console.</p>';
+    }
+}
+
+window.addEventListener('DOMContentLoaded', buscarDados);

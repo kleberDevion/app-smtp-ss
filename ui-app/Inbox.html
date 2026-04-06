@@ -160,7 +160,7 @@ window.addEventListener('keydown', (e) => {
 
   async function buscarDados() {
     try {
-      const response = await fetch(`http://localhost:5500/api/buscar/inbox`, {
+      const response = await fetch(`http://localhost:5500/ss/inbox`, {
         method: 'GET',
         headers: { 
           'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ async function deletarItem(id) {
   if (!confirm('Deseja excluir essa desgraça?')) return;
 
   try {
-    const res = await fetch(`http://localhost:5500/api/deletar/${id}`, { 
+    const res = await fetch(`http://localhost:5500/ss/deletar/envio/${id}`, { 
       method: 'DELETE' 
     });
 
@@ -234,7 +234,7 @@ form.addEventListener('submit', async (e) => {
   };
 
   try {
-    const response = await fetch('http://localhost:2200/api/enviar/email', {
+    const response = await fetch('http://localhost:5500/ss/enviar/email', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

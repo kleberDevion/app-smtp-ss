@@ -3,9 +3,8 @@ import smtplib
 import re
 import os
 from datetime import datetime, timedelta
-from flask import Flask, request, jsonify, send_from_directory, make_response
+from flask import Flask, request, jsonify
 from flask_cors import CORS
-from werkzeug.security import generate_password_hash, check_password_hash
 
 # Importações dos controladores locais
 from controladores.controle_usuario import criar_users, logar_user

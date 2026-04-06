@@ -52,7 +52,7 @@ document.addEventListener('click', (event) => {
 
 async function chamarDadosErroId() {
     try {
-        const response = await fetch('http://localhost:5500/api/trazer/logs_erro');
+        const response = await fetch('http://localhost:5500/ss/trazer/logs_erro');
         const dados = await response.json();   
         const container = document.querySelector('.logs-ids');
 
@@ -93,7 +93,7 @@ async function chamarDadosErroId() {
 
 async function deletarItem(id) {
   try {
-    const resposta = await fetch(`http://localhost:5500/api/deletar/falhas/${id}`, {
+    const resposta = await fetch(`http://localhost:5500/ss/deletar/falhas/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
