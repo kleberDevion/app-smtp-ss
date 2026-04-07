@@ -183,19 +183,6 @@ btn.addEventListener('mouseleave', () => {
     box.classList.remove('box-ativa');
 });
 
-
-const chat = document.getElementById('chat-camp');
-const aviso = `
-   <div id="aviso" style="color: lime; display: flex; width: auto; height: auto; position: absolute; left: 42%; top: 50%; flex-direction: column; align-items: center; gap: 30px;">
-      <i class="ri-chat-check-line" style="font-size: 60px; color: #fff;"></i>
-      <p>Selecione uma conversa</p>
-   </div>
-`;
-
-if (!chat.innerHTML || chat.innerHTML.trim() === "") {
-    chat.innerHTML = aviso;
-}
-
 const conteinerDados = document.querySelector('#chat-camp');
 
 let dadosGlobal = [];

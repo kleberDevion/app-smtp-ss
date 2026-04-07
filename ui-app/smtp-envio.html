@@ -31,7 +31,8 @@
       <option value="./resultados-emails.html">Dashboard visao geral </option>
       <option value="./dashboard.html">Dashbboard main <i class="fas fa-chart-line" style="font-size: 17px; color: #2196f7; margin-top: px; "></i></option>
       <option value="./manager.html">Dashboard envios falhos <i class="fas fa-server" style="font-size: 17px; color: #2196f7; margin-top: px;"></i></option>
-      <option value="./inbox.html">Envio de emails<i class="fas fa-server" style="font-size: 17px; color: #2196f7; margin-top: px;"></i></option>    
+      <option value="./inbox.html">Envio de emails<i class="fas fa-server" style="font-size: 17px; color: #2196f7; margin-top: px;"></i></option>
+       <option value="./home-chat.html">Chat<i class="fas fa-ser" style="font-size: 17px; color: #2196f7; margin-top: px;"></i></option>    
     </select>
    <div class="control">
     <button type="button" class="log-out" onclick="logout()" title="Sair">
@@ -149,6 +150,9 @@ function closeForm() {
 
 function redirectUser() {
   window.location.href = './dashboard.html';
+}
+function redirectUser() {
+  window.location.href = './home-chat.html';
 }
   
 const menu = document.querySelector('.menu');

@@ -6,15 +6,15 @@ from dotenv import load_dotenv
 # Carrega as variáveis de ambiente do arquivo .env
 load_dotenv()
 
-DB_NAME = os.getenv('DB_PATH')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, '..', 'SSbanco.db') 
 
 def db_connection():
     """
     Estabelece uma conexão com o banco de dados SQLite.
     """
     try:
-        conn = sqlite3.connect(DB_NAME)
-        # Configura o row_factory para permitir acesso aos resultados por nome de coluna
+        conn = sqlite3.connect(DB_PATH)
         conn.row_factory = sqlite3.Row
         return conn
     except sqlite3.Error as e:
