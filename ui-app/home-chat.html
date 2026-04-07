@@ -187,6 +187,8 @@ const chatCamp = document.getElementById('chat-camp');
 const sidebar = document.getElementById('grupos');
 const formMsg = document.getElementById('formMsg');
 
+window.conversaAtivaEmail = localStorage.getItem('conversaAtiva') || null;
+
 const aviso = `
  <div id="aviso" style="color: lime; display: flex; width: auto; height: auto; position: absolute; left: 42%; top: 50%; flex-direction: column; align-items: center; gap: 30px;">
       <i class="ri-chat-check-line" style="font-size: 60px; color: #fff;"></i>
@@ -216,6 +218,7 @@ function criarCardLateral(data) {
 
     document.getElementById(idDoCard).onclick = () => {
         window.conversaAtivaEmail = data.email_user;
+        localStorage.setItem('conversaAtiva', data.email_user);
         chatCamp.innerHTML = ""; 
         buscarMensagens();
     };
@@ -285,7 +288,11 @@ async function carregarSidebar() {
         sidebar.innerHTML = "";
         usuariosUnicos.forEach(user => criarCardLateral(user));
 
-        if (!chatCamp.innerHTML.trim()) chatCamp.innerHTML = aviso;
+        if (window.conversaAtivaEmail) {
+            buscarMensagens();
+        } else if (!chatCamp.innerHTML.trim()) {
+            chatCamp.innerHTML = aviso;
+        }
     } catch (e) {
         console.error("Erro ao carregar sidebar:", e);
     }
