@@ -207,6 +207,32 @@
             right: -150px;
         }
     }
+    
+   
+body.error-active > *:not(.not-found) {
+    display: none !important;
+}
+
+.not-found {
+    display: none; 
+    background: #111425;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.not-found.aceso {
+    display: flex;
+}
+
+
 </style>
 
      <header id="topo">
@@ -224,6 +250,13 @@
                 </button>
             </form>
         </div>
+     <div class="not-found">
+        <i class="ri-error-warning-line" style="font-size: 80px; color: #ff4747;"></i>
+        <h2 style="margin-top: 20px;">Ops! Algo deu errado.</h2>
+        <p>Não conseguimos carregar as mensagens.</p>
+        <button onclick="location.reload()" style="margin-top: 30px; padding: 10px 20px; cursor: pointer; border: none; border-radius: 5px;">Tentar Novamente</button>
+    </div>
+
      <div id="top"></div>
      <nav id="grupos">
 
@@ -237,6 +270,15 @@
 </div>
 <!--fezes-->
 <script>
+
+const notPage = document.querySelector('.not-found');
+
+function showNotFound() {
+    if (notPage) {
+        notPage.classList.add('aceso'); 
+        document.body.classList.add('error-active');
+    }
+}
 
 const socket = io("http://127.0.0.1:5507");
 const chatCamp = document.getElementById('chat-camp');
@@ -280,9 +322,18 @@ function criarCardLateral(data) {
 async function buscarMensagens() {
     try {
         const response = await fetch('http://localhost:5507/tunnek/msg');
+
+        if (!response.ok || response === null) {
+            return showNotFound();
+        }
+
         const resultado = await response.json();
 
-        if (!Array.isArray(resultado)) return;
+        //if (!Array.isArray(resultado)) return;
+
+        if (!resultado || (Array.isArray(resultado) && resultado.length === 0)) {
+            return showNotFound();
+        }
 
         const mensagensFiltradas = resultado.filter(m => {
             return m.email_user === window.conversaAtivaEmail || m.email_destinatario === window.conversaAtivaEmail;
@@ -335,8 +386,11 @@ async function buscarMensagens() {
         chatCamp.scrollTop = chatCamp.scrollHeight;
     } catch (err) {
         console.error("Erro ao buscar mensagens:", err);
+        showNotFound();
     }
 }
+
+buscarMensagens()
 
 function toggleOptions(btn) {
   const options = btn.nextElementSibling; 
