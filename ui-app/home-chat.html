@@ -240,7 +240,8 @@ body.error-active > *:not(.not-found) {
      </header>
  
         <div id="aviso-preencher"></div>
-        <div id="chat-camp"></div>
+        <div id="chat-camp">
+        </div>
 
         <div id="footer-editor">
             <form id="formMsg">
@@ -273,26 +274,30 @@ body.error-active > *:not(.not-found) {
 
 const notPage = document.querySelector('.not-found');
 
-function showNotFound() {
-    if (notPage) {
-        notPage.classList.add('aceso'); 
-        document.body.classList.add('error-active');
-    }
-}
 
 const socket = io("http://127.0.0.1:5507");
 const chatCamp = document.getElementById('chat-camp');
 const sidebar = document.getElementById('grupos');
 const formMsg = document.getElementById('formMsg');
 
-window.conversaAtivaEmail = localStorage.getItem('conversaAtiva') || null;
+window.conversaAtivaEmail = null;
+localStorage.removeItem('conversaAtiva');
 
 const aviso = `
-   <div id="aviso" style="color: lime; display: flex; width: auto; height: auto; position: absolute; left: 42%; top: 50%; flex-direction: column; align-items: center; gap: 30px;">
+   <div id="aviso" style="color: lime; display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; gap: 30px;">
       <i class="ri-chat-check-line" style="font-size: 60px; color: #fff;"></i>
-      <p>Selecione uma conversa</p>
+      <p style="color: #fff; font-family: sans-serif;">Selecione uma conversa</p>
    </div>
 `;
+
+chatCamp.innerHTML = aviso;
+
+function showNotFound() {
+    if (notPage) {
+        notPage.classList.add('aceso'); 
+        document.body.classList.add('error-active');
+    }
+}
 
 function criarCardLateral(data) {
     const idUnico = data.email_user.replace(/[@.]/g, '');
@@ -301,7 +306,7 @@ function criarCardLateral(data) {
     if (document.getElementById(idDoCard)) return;
 
     const htmlCard = `
-        <div id="${idDoCard}" style="width: 100%; height: 70px; border: 1px solid #535151; padding-left: 8px; background: #232323; display: flex; align-items: center; position: relative; cursor: pointer; margin-bottom: 5px;">
+        <div id="${idDoCard}" style="width: 100%; height: 70px; border: 1px solid #535151; border-left-radius: 9px; padding-left: 8px; background: #232323; display: flex; align-items: center; position: relative; cursor: pointer; margin-bottom: 5px;">
           <div style="width: 50px; height: 50px; border-radius: 50%; border: 1px solid #535151; display: flex; align-items: center; justify-content: center;">
             <i class="fas fa-user" style="color: white;"></i>
           </div>
@@ -320,6 +325,8 @@ function criarCardLateral(data) {
 }
 
 async function buscarMensagens() {
+    if (!window.conversaAtivaEmail) return;
+
     try {
         const response = await fetch('http://localhost:5507/tunnek/msg');
 
@@ -390,11 +397,28 @@ async function buscarMensagens() {
     }
 }
 
+async function carregarSidebar() {
+    try {
+        const response = await fetch('http://localhost:5507/tunnek/msg');
+        const mensagens = await response.json();
+        if (!Array.isArray(mensagens)) return;
+        
+        const usuariosUnicos = [...new Map(mensagens.map(m => [m.email_user, m])).values()];
+        sidebar.innerHTML = "";
+        usuariosUnicos.forEach(user => criarCardLateral(user));
+
+        if (window.conversaAtivaEmail) buscarMensagens();
+    } catch (e) {
+      console.error(e); 
+    }
+}
+
+carregarSidebar()
+
 buscarMensagens()
 
 function toggleOptions(btn) {
-  const options = btn.nextElementSibling; 
-  
+  const options = btn.nextElementSibling;  
   if (options.style.display === "none" || options.style.display === "") {
     options.style.display = "flex";
   } else {
@@ -426,20 +450,6 @@ async function abrirOps(id) {
     alert(erro.message);
   }
   
-}
-
-async function carregarSidebar() {
-    try {
-        const response = await fetch('http://localhost:5507/tunnek/msg');
-        const mensagens = await response.json();
-        if (!Array.isArray(mensagens)) return;
-        
-        const usuariosUnicos = [...new Map(mensagens.map(m => [m.email_user, m])).values()];
-        sidebar.innerHTML = "";
-        usuariosUnicos.forEach(user => criarCardLateral(user));
-
-        if (window.conversaAtivaEmail) buscarMensagens();
-    } catch (e) { console.error(e); }
 }
 
 const msgInput = document.getElementById('editor-msg'); 
