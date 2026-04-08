@@ -88,6 +88,7 @@
        position: absolute;
        left: 210px;
        outline: none;
+       display: flex;
     }
 
     #chat-camp {
@@ -150,25 +151,80 @@
        color: #fff;
        background: #111425;
     }
+
+    .ops-container {
+        width: 200px;
+        height: 100px;
+        background: #232323;
+        border: 1px solid #413f3f;
+        border-radius: 5px;
+        z-index: 100;
+        margin-right: -198px;
+        display: none;
+        margin-top: 63px;
+        flex-direction: column;
+        align-items: center;
+        font-size: 10px;
+    }
+
+    #ops-btn:hover {
+       cursor: pointer;
+    }
+
+    .btn-delete {
+        width: 100%;
+        height: 20px;
+        border-bottom: 1px solid #413f3f;
+        align-items: center;
+        padding: 4px;
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+    .btn-delete:hover {
+        background-color: #555353;
+    }
+
+    #aviso-preencher {
+        width: 300px;
+        height: 60px;
+        background-color: rgb(248, 47, 47);
+        display: flex;
+        z-index: 1000;
+        position: absolute;
+        right: -300px;
+    }
+
+    #aviso-preencher.aviso {
+        display: block;
+        transform: translateX(-150px);
+    }
+
+    @keyframes moviment {
+        to {
+            right: -300px;
+        } from {
+            right: -150px;
+        }
+    }
 </style>
 
      <header id="topo">
 
      </header>
-     <div id="chat-capm">
-
+ 
+        <div id="aviso-preencher"></div>
         <div id="chat-camp"></div>
 
         <div id="footer-editor">
             <form id="formMsg">
                 <input type="text" id="editor-msg" placeholder="Mandar menssagem..." autocomplete="off">
-                <button type="button" id="send-msg" form="formMsg">
+                <button type="submit" id="send-msg" form="formMsg">
                     <i class="fas fa-paper-plane" style="transform: rotateZ(46deg);"></i>
                 </button>
             </form>
         </div>
-     </div>
-      <div id="top"></div>
+     <div id="top"></div>
      <nav id="grupos">
 
      </nav>
@@ -190,7 +246,7 @@ const formMsg = document.getElementById('formMsg');
 window.conversaAtivaEmail = localStorage.getItem('conversaAtiva') || null;
 
 const aviso = `
- <div id="aviso" style="color: lime; display: flex; width: auto; height: auto; position: absolute; left: 42%; top: 50%; flex-direction: column; align-items: center; gap: 30px;">
+   <div id="aviso" style="color: lime; display: flex; width: auto; height: auto; position: absolute; left: 42%; top: 50%; flex-direction: column; align-items: center; gap: 30px;">
       <i class="ri-chat-check-line" style="font-size: 60px; color: #fff;"></i>
       <p>Selecione uma conversa</p>
    </div>
@@ -208,9 +264,6 @@ function criarCardLateral(data) {
             <i class="fas fa-user" style="color: white;"></i>
           </div>
           <div style="margin-left: 10px; color: #fff; font-size: 14px;">${data.user_name}</div>
-          <div style="width: 40px; display: flex; justify-content: center; color: #fff; position: absolute; right: 5px; font-size: 10px; bottom: 5px; border-top-left-radius: 5px; border: 1px solid aqua;">
-              ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-          </div>
         </div>
     `;
 
@@ -228,9 +281,12 @@ async function buscarMensagens() {
     try {
         const response = await fetch('http://localhost:5507/tunnek/msg');
         const resultado = await response.json();
-        let dadosGlobal = Array.isArray(resultado) ? resultado : [resultado];
 
-        const mensagensFiltradas = dadosGlobal.filter(m => m.email_user === window.conversaAtivaEmail);
+        if (!Array.isArray(resultado)) return;
+
+        const mensagensFiltradas = resultado.filter(m => {
+            return m.email_user === window.conversaAtivaEmail || m.email_destinatario === window.conversaAtivaEmail;
+        });
 
         if (mensagensFiltradas.length === 0) {
             chatCamp.innerHTML = aviso;
@@ -238,73 +294,119 @@ async function buscarMensagens() {
         }
 
         chatCamp.innerHTML = mensagensFiltradas.map(dados => {
-    
-         if (dados.is_dev) {
+            if (dados.is_dev) {
+                return `
+                <div id="item${dados.id}" style="width: auto; height: auto; display: flex; gap: 7px; flex-direction: column; margin-bottom: 20px; align-self: flex-start;">
+                    <div style="width: 100%; height: auto; background: #111425; border-top: 3px solid #2196f7; display: flex; flex-direction: column; color: #fff; border-bottom-left-radius: 7px; gap: 5px; padding-top: 4px;">
+                        <div style="width: 100%; height: 25px; display: flex; flex-direction: row; align-items: center; padding-left: 4px;">
+                            <p style="font-weight: bold; color: gold; margin-left: 10px; font-size: 10px;">${dados.user_name}</p>
+                            <button type="button" id="ops-btn" onclick="toggleOptions(this)" style="width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; color: #fff; background: #111425; border: none; transform: translateX(auto); margin-left: auto;">
+                                <i class="ri-arrow-down-s-line"></i>
+                            </button>                            
+                            <div class="ops-container" onclick="abrirOps(${dados.id})">
+                              <div class="btn-delete">
+                                <i class="fas fa-trash"></i>
+                                 <p>Deletar menssagem</p>
+                              </div>
+                            </div>
+                        </div>
+                        <span style="width: 100%; min-width: 190px; height: 15px; background: #2196f7; display: flex; font-family: sans-serif; font-size: 10px; font-weight: bold; border-bottom-left-radius: 7px; align-items: center;">
+                            <h3 style="margin-left: 10px; font-size: 10px;">Developer | Sistema</h3>
+                        </span>
+                    </div>
+                    <div style="max-width: 400px; height: auto; background: #111425; display: flex; gap: 3px; border-top-left-radius: 10px; border-bottom: 4px solid #2196f7; border-bottom-right-radius: 10px; padding: 10px; position: relative; color: #fff; font-weight: bold; flex-direction: column; font-size: 10px;">
+                        <p style="margin: 0; word-break: break-all;">${dados.msg}</p>
+                        <div style="font-size: 10px; align-self: flex-end; margin-top: 5px; opacity: 0.7;">${dados.data_envio}</div>
+                    </div>
+                </div>`;
+            }
             return `
-              <div style="width: auto; height: auto; display: flex; gap: 7px; flex-direction: column; margin-bottom: 20px; align-self: flex-start;">
-              <div style="width: 100%; height: auto; background: #111425; border-top: 3px solid #2196f7; display: flex; flex-direction: column; color: #fff; border-bottom-left-radius: 7px; gap: 5px; padding-top: 4px;">
-                <div style="width: 100%; height: 25px; display: flex; flex-direction: row; gap: 1px; align-items: center; padding-left: 4px;">
-                    <h4 style="width: 20px; height: 20px; border-radius: 50%; border: 1px solid #fff; display: flex; align-items: center; justify-content: center; margin: 0;"></h4>
-                    <p style="font-weight: bold; color: gold; margin-left: 10px; font-size: 10px;">${dados.user_name}</p>
-                </div>
-                <span style="width: 100%; min-width: 190px; height: 15px; background: #2196f7; display: flex; font-family: sans-serif; font-size: 10px; font-weight: bold; border-bottom-left-radius: 7px; align-items: center;">
-                    <h3 style="margin-left: 10px; font-size: 10px;">Developer | Sistema</h3>
-                </span>
-               </div>
-               <div style="max-width: 400px; height: auto; background: #111425; display: flex; gap: 3px; border-top-left-radius: 10px; border-bottom: 4px solid #2196f7; border-bottom-right-radius: 10px; padding: 10px; position: relative; color: #fff; font-weight: bold; flex-direction: column;">
-                 <p style="margin: 0; word-break: break-all;">${dados.msg}</p>
-                 <div style="font-size: 10px; align-self: flex-end; margin-top: 5px; opacity: 0.7;">
-                     ${dados.data_envio}
-                 </div>
-              </div>
-              </div>`;
-         }
-            return  `
-               <div style="width: auto; display: flex; flex-direction: column; gap: 7px; font-size: 10px; margin-bottom: 15px;">
-                <div style="background: #DCF8C6; padding: 5px 7px; font-size: 12px; border-radius: 5px; width: fit-content;">
-                    <p style="margin: 0;">${dados.user_name || "user"}</p>
-                </div>
-                <div style="background: #DCF8C6; padding: 10px; border-radius: 10px; max-width: 400px; word-break: break-all;">
-                    <p style="margin: 0;">${dados.msg || ""}</p>
-                     <div style="width: auto; height: 15px; display: flex; align-items: center; justify-content: center; font-size: 10px;">${dados.data_envio}</div>
-                </div>
-               </div> 
-            `;
-
+                <div id="item${dados.id}" style="width: auto; display: flex; flex-direction: column; gap: 7px; font-size: 10px; margin-bottom: 15px;">
+                    <div style="width: 100%; background: #DCF8C6; padding: 5px 7px; font-size: 12px; border-radius: 5px;">
+                        <p style="margin: 0;">${dados.user_name || "user"}</p>
+                    </div>
+                    <div style="background: #DCF8C6; padding: 10px; border-radius: 10px; max-width: 400px; word-break: break-all;">
+                        <p style="margin: 0;">${dados.msg || ""}</p>
+                        <div style="width: auto; height: 15px; display: flex; align-items: center; justify-content: center; font-size: 10px;">${dados.data_envio}</div>
+                    </div>
+                </div>`;
         }).join('');
+        
+        chatCamp.scrollTop = chatCamp.scrollHeight;
     } catch (err) {
         console.error("Erro ao buscar mensagens:", err);
     }
 }
 
+function toggleOptions(btn) {
+  const options = btn.nextElementSibling; 
+  
+  if (options.style.display === "none" || options.style.display === "") {
+    options.style.display = "flex";
+  } else {
+    options.style.display = "none";
+  }
+}
+
+
+async function abrirOps(id) {
+  try {
+    const response = await fetch(`http://localhost:5507/remove/item/${id}`, {
+       method: 'DELETE',
+       headers: {
+         'Content-Type': 'application/json',
+         'Authorization': `Bearer ${localStorage.getItem('token_acesso')}`
+       },
+    });
+
+    const dados = response.json()
+
+    if (!response.ok) {
+        alert('Erro ao deletar item.')
+    }
+
+    document.getElementById(`item${id}`).remove();
+
+  } catch (error) {
+    console.error('Erro:', erro);
+    alert(erro.message);
+  }
+  
+}
 
 async function carregarSidebar() {
     try {
         const response = await fetch('http://localhost:5507/tunnek/msg');
         const mensagens = await response.json();
+        if (!Array.isArray(mensagens)) return;
         
         const usuariosUnicos = [...new Map(mensagens.map(m => [m.email_user, m])).values()];
-        
         sidebar.innerHTML = "";
         usuariosUnicos.forEach(user => criarCardLateral(user));
 
-        if (window.conversaAtivaEmail) {
-            buscarMensagens();
-        } else if (!chatCamp.innerHTML.trim()) {
-            chatCamp.innerHTML = aviso;
-        }
-    } catch (e) {
-        console.error("Erro ao carregar sidebar:", e);
-    }
+        if (window.conversaAtivaEmail) buscarMensagens();
+    } catch (e) { console.error(e); }
 }
+
+const msgInput = document.getElementById('editor-msg'); 
+const alerta = document.getElementById('aviso-preencher');
 
 formMsg.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const msgInput = document.querySelector('#editor-msg');
-    
+
+    const value = document.querySelector('#editor-msg').value
+
+    if (!value || value.trim() === '') {
+        console.log("Erro");
+        alerta.classList.add('ativo');
+    } else {
+        console.log("Sucesso! Conteúdo");
+    }
+
     const data = {
         user_name: localStorage.getItem('userName'),
         email_user: localStorage.getItem('userEmail'),
+        email_destinatario: window.conversaAtivaEmail,
         msg: msgInput.value
     };
 
@@ -315,14 +417,12 @@ formMsg.addEventListener('submit', async (e) => {
             body: JSON.stringify(data)
         });
         msgInput.value = "";
-    } catch (error) {
-        console.error("Erro ao enviar:", error);
-    }
+    } catch (error) { console.error(error); }
 });
 
 socket.on('nova_mensagem_global', (data) => {
-    criarCardLateral(data);
-    if (window.conversaAtivaEmail === data.email_user) {
+    carregarSidebar(); 
+    if (window.conversaAtivaEmail === data.email_user || window.conversaAtivaEmail === data.email_destinatario) {
         buscarMensagens();
     }
 });
