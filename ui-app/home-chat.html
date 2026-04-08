@@ -274,7 +274,6 @@ body.error-active > *:not(.not-found) {
 
 const notPage = document.querySelector('.not-found');
 
-
 const socket = io("http://127.0.0.1:5507");
 const chatCamp = document.getElementById('chat-camp');
 const sidebar = document.getElementById('grupos');
@@ -331,7 +330,8 @@ async function buscarMensagens() {
         const response = await fetch('http://localhost:5507/tunnek/msg');
 
         if (!response.ok || response === null) {
-            return showNotFound();
+            showNotFound()
+            return;
         }
 
         const resultado = await response.json();
@@ -409,7 +409,8 @@ async function carregarSidebar() {
 
         if (window.conversaAtivaEmail) buscarMensagens();
     } catch (e) {
-      console.error(e); 
+      console.error(e);
+       showNotFound();
     }
 }
 
