@@ -9,6 +9,7 @@ from flask_cors import CORS
 # Importações dos controladores locais
 from controladores.controle_usuario import criar_users, logar_user
 from controladores.envio_de_email import envio_email
+from controladores.controller_admins import scan_data
 from controladores.dados_manager import (
     dashboard_main_dados, 
     inbox_mail_dados, 
@@ -23,7 +24,6 @@ from controladores.dados_manager import (
 app = Flask(__name__)
 CORS(app, resources={r"/ss/*": {"origins": "*"}})
 
-# Definição de métodos permitidos baseada na lógica 'permiser'
 ALLOWED_METHODS = ['POST', 'GET', 'DELETE']
 
 def check_method():
@@ -146,6 +146,17 @@ def rota_deletar_falhas(id):
     print(f"REQUISIÇÃO ROTA: 'DELETE' /ss/deletar/falhas : {datetime.now()}")
     
     result = deletar_falha(id)
+    return result
+
+@app.route('/ss/login/admin', methods=['POST'])
+def logar_admin():
+    method_check = check_method()
+    if method_check: return method_check
+    
+    data = request.get_json()
+    print(f"REQUISIÇÃO ROTA: 'POST' /ss/logar/usuario : {datetime.now()}")
+    
+    result = scan_data(data)
     return result
 
 if __name__ == '__main__':
